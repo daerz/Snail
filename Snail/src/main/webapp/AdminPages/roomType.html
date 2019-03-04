@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>房型信息</title>
+	<meta name="renderer" content="webkit">	
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">	
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">	
+	<meta name="apple-mobile-web-app-capable" content="yes">	
+	<meta name="format-detection" content="telephone=no">	
+	<link rel="stylesheet" type="text/css" href="common/layui/css/layui.css" media="all">
+	<link rel="stylesheet" type="text/css" href="common/bootstrap/css/bootstrap.css" media="all">
+	<link rel="stylesheet" type="text/css" href="common/global.css" media="all">
+	<link rel="stylesheet" type="text/css" href="css/roomType.css" media="all">
+	<style type="text/css">
+	#modal {
+	    position: fixed;
+	    left: 0;
+	    right: 0;
+	    top: 0;
+	    bottom: 0;
+	    z-index: 9999;
+	    display: none;
+	}
+	#modal .mask {
+	    position: absolute;
+	    left: 0;
+	    right: 0;
+	    top: 0;
+	    bottom: 0;
+	    background-color: #000;
+	    opacity: .3;
+	}
+	</style>
+</head>
+<body>
+<section class="layui-larry-box" id="roomTypeSection">
+	
+	<div id="modal">
+    <div class="mask"></div>
+    <div style="width:100;height:80px;text-align: center;line-height: 80px;margin: 100px auto;font-size: 50px;font-weight: bold;color: yellow;">图片上传中。。。</div>
+    <div class="dialog"></div>
+	</div>
+	
+	<div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel01" aria-hidden="true" class=" z-index: 9998;">
+	    <div class="modal-dialog">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	                <h4 class="modal-title" id="myModalLabel01">图片上传</h4>
+	            </div>
+	            <div class="modal-body">
+	            	<form action="/Snail/roomTypeImg/source"  id="saveReportForm"  method="post" onsubmit="return saveReport();">
+	            		
+   						<input type="file"  name="imageFile">
+						<input type="text" value="" v-model="tips" placeholder="请输描述" name="rti_note" style="width:100%; height:34px; margin-top:20px; padding-left:8px;">
+						<input type="hidden" v-model="crt" name="rti_rt_id">
+						<br><br>
+	                	<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+	                	<button type="button" id="submitFile" class="btn btn-primary">提交</button>
+	               		<input id="realSubmit" style="display:none;" type="submit" value="提交"></input>
+	            	</form>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+
+	<div class="larry-personal">
+	    <div class="layui-tab">
+         	<blockquote class="layui-elem-quote news_search">
+				
+				<div class="layui-inline">
+					<div class="layui-form-mid layui-word-aux">※显示所有的房型信息※</div>
+				</div>
+				<div class="layui-inline" style="float: right;">
+					<button @click='addRoomType' class="layui-btn layui-btn-radius layui-btn-danger">添加房型</button>
+				</div>
+			</blockquote>
+		         <!-- 房型信息-->
+                <div class="layui-form news_list">
+                    <table class="layui-table">
+					    <colgroup>
+						<col width="13%">
+						<col width="13%">
+						<col width="13%">
+						<col width="15%">
+						<col>
+						<col width="6%">
+						<col width="6%">
+						<col width="6%">
+					</colgroup>
+					<thead>
+						<tr>
+							<th>房型名</th>
+							<th>可住人数</th>
+							<th>面积(平方米)</th>
+							<th>预览图</th>
+							<th>备注</th>
+							<th>设施描述</th>
+							<th>编辑</th>
+							<th>删除</th>
+						</tr>
+					</thead>
+					<tbody class="news_content">
+						<tr v-for="(item,index) in roomType"><td>{{item.rt_name}}</td><td>{{item.rt_num}}</td><td>{{item.rt_area}}</td>
+						<td>
+						<div class="pictureShelf">
+							<div @click="showImg(index)" class="picture">
+							<img v-if="item.rt_img=='default'  " src="images/default.jpg">
+							<img v-else :src="roomType[index].rt_img">
+							</div>
+							<div class="pictureBt">
+							<a  @click="editImg(item.rt_id)" class="layui-btn layui-btn-mini "><i class="iconfont "></i> 编辑</a><br>
+							<a  @click="changetype(item.rt_id)" data-toggle="modal" data-target="#uploadModal" class="layui-btn layui-btn-mini "><i class="iconfont "></i> 上传</a>
+							</div>
+						</div>
+						</td>
+						<td>{{item.rt_note}}</td>
+						<td><a @click="showStaticInfo(item.rt_id)" class="layui-btn layui-btn-normal layui-btn-mini">浏览</a></td>
+						<td><a @click="changeRoomType(index)" class="layui-btn layui-btn-mini "><i class="iconfont icon-edit"></i> 编辑</a></td>
+						<td><a @click='deleteRoomType(item.rt_id)' class="layui-btn layui-btn-danger layui-btn-mini " data-id="1"><i class="layui-icon"></i>删除</a></td>
+						</tr>
+					</tbody>
+					</table>
+			    </div>
+		    </div>
+		</div>
+</section>
+<script  src="js/vue.js"></script>
+<script src="js/vue-resource.js"></script>
+<script src="js/vue-axios.js"></script>
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery.form.js"></script>
+<script src="js/qs.js"></script>
+<script type="text/javascript" src="common/layui/layui.js"></script>
+<script type="text/javascript" src="js/newslist.js"></script>
+<script type="text/javascript" src="common/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+
+	var vm = new Vue({
+		el:'#roomTypeSection',
+		data:{
+			roomType:[],
+			roomStatic:{},
+			roomTypeImg:[],
+			nowRoomTypeImg:'images/default.jpg',
+			crt:0,
+			tips:''
+		},
+		methods:{
+// 			上传图片
+			changetype:(rtid)=>{
+				vm.crt=rtid;
+			},
+// 			编辑房型图片
+			editImg:(rtid)=>{
+				axios.get('/Snail/roomTypeImg/source',{params:{rt_id:rtid}})
+				.then(res => {
+					vm.roomTypeImg=[];
+					vm.nowRoomTypeImg='images/default.jpg';
+					for(imgs in res.data){
+						if(res.data[imgs].rti_flage==0){
+							vm.roomTypeImg.push(res.data[imgs]);
+						}
+					}
+				}).then(()=>{
+					let imgNum = vm.roomTypeImg.length;
+					let nowImg = 0;
+					if(imgNum>0){
+						vm.nowRoomTypeImg=vm.roomTypeImg[0].rti_path;
+					}
+					let h = 0;
+					if(imgNum!=0){
+						h=1;
+					}
+					let note = '默认图片';
+					if(imgNum!=0){
+						note=vm.roomTypeImg[0].rti_note;
+					}
+					content = '<div class="kk" style="overflow: hidden;"><img id="nowPicture" src='+vm.nowRoomTypeImg+'  alt="图片姬走丢了"></div><div style="text-align: center;" id="imgnote">'+note+'</div><div style="text-align: center;"><span id="nowpages">'+h+'</span>/<span id="allpages">'+imgNum+'</span></div>';
+					
+					layer.open({
+						area:'600px',
+						title:false,
+						type:1,
+						closeBtn: false,
+						resize:false,
+						move: false,
+						content:content,
+						btn:["更换","删除","<",">","退出"],
+						yes:function(index,layero){
+							let info = {};
+							info['rt_id']=rtid;
+							info['rt_img']=vm.nowRoomTypeImg;
+							axios.put('/Snail/roomType/source',Qs.stringify({...info}))
+							.then((res)=>{
+								if(res.data=="修改成功！"){
+									vm.getRoomType();
+									layer.open({
+										title:"消息",
+										closeBtn: false,
+										resize:false,
+										move: false,
+										content:"修改成功"
+									})
+								}else{
+									layer.open({
+										title:"消息",
+										closeBtn: false,
+										resize:false,
+										move: false,
+										content:"修改失败"
+									})
+								}
+							})
+						},
+						btn2:function(index,layero){
+							let rtiid=vm.roomTypeImg[nowImg].rti_id;
+							axios.delete('/Snail/roomTypeImg/source',{params:{
+								rti_id:rtiid
+							}})
+							.then((res)=>{
+								layer.closeAll();
+								if(res.data=="删除成功！"){
+									layer.open({
+										title:"消息",
+										closeBtn: false,
+										resize:false,
+										move: false,
+										content:"删除成功"
+									})
+								}else{
+									layer.open({
+										title:"消息",
+										closeBtn: false,
+										resize:false,
+										move: false,
+										content:"删除失败"
+									})
+								}
+							});
+						},
+						btn3:function(index,layero){
+							if(nowImg<=0 && imgNum>0){
+								nowImg=0;
+								vm.nowRoomTypeImg=vm.roomTypeImg[nowImg].rti_path;
+								$("#nowPicture").attr("src",vm.nowRoomTypeImg);
+							}
+							if(nowImg>0 && imgNum>0){
+								nowImg=nowImg-1;
+								vm.nowRoomTypeImg=vm.roomTypeImg[nowImg].rti_path;
+								$("#nowPicture").attr("src",vm.nowRoomTypeImg);
+							}
+							if(imgNum<=0){
+								vm.nowRoomTypeImg='images/default.jpg';
+								$("#nowPicture").attr("src",vm.nowRoomTypeImg);
+							}
+							$("#imgnote").html(vm.roomTypeImg[nowImg].rti_note);
+							$("#nowpages").html(nowImg+1);
+							return false;
+						},
+						btn4:function(index,layero){
+							if(nowImg>=imgNum-1 && imgNum>0){
+								nowImg=imgNum-1;
+								vm.nowRoomTypeImg=vm.roomTypeImg[nowImg].rti_path;
+								$("#nowPicture").attr("src",vm.nowRoomTypeImg);
+							}
+							if(nowImg<imgNum-1 && imgNum>0){
+								nowImg=nowImg+1;
+								vm.nowRoomTypeImg=vm.roomTypeImg[nowImg].rti_path;
+								$("#nowPicture").attr("src",vm.nowRoomTypeImg);
+							}
+							if(imgNum<=0){
+								vm.nowRoomTypeImg='images/default.jpg';
+								$("#nowPicture").attr("src",vm.nowRoomTypeImg);
+							}
+							$("#imgnote").html(vm.roomTypeImg[nowImg].rti_note);
+							$("#nowpages").html(nowImg+1);
+							return false;
+						}
+					})
+				})
+				
+			},
+// 			浏览静态信息
+			showStaticInfo:(rtid)=>{
+				
+				axios.get('/Snail/roomStaticInfo/source',{params:{rt_id:rtid}}).then(res => {
+					if(res.data.length>0){
+						let content = `
+							<div style="padding: 50px; line-height: 22px; font-weight: 300;">
+							家具配套:${res.data[0].si_furniture}<br/><br/>
+							浴室配套:${res.data[0].si_bath}<br/><br/>
+							休闲娱乐:${res.data[0].si_entertainment}<br/><br/>
+							接机服务:${res.data[0].si_airport}<br/><br/>
+							取消规则:${res.data[0].si_cancleRule}<br/><br/>
+							使用规则:${res.data[0].si_useRule}<br/>
+							</div>
+							<hr/>
+						`
+						layer.open({
+							area:'400px',
+							title:false,
+							type:1,
+							closeBtn: false,
+							resize:false,
+							move: false,
+							content:content,
+							btn:["修改","退出"],
+							yes:function(index,layero){
+								layer.closeAll();
+								vm.changeStatic(res.data[0].si_id);
+							}
+						})
+					}else{
+						let content = `
+							<div style="padding: 50px; line-height: 22px; font-weight: 300;">
+							家具配套:无<br/><br/>
+							浴室配套:无<br/><br/>
+							休闲娱乐:无<br/><br/>
+							接机服务:无<br/><br/>
+							取消规则:无<br/><br/>
+							使用规则:无<br/>
+							</div>
+							<hr/>
+						`
+						layer.open({
+							area:'400px',
+							title:false,
+							type:1,
+							closeBtn: false,
+							resize:false,
+							move: false,
+							content:content,
+							btn:["修改","退出"],
+							yes:function(index,layero){
+								layer.closeAll();
+								vm.addStatic(rtid);
+							}
+						})
+					}
+		         }).catch(function (error) {
+		             console.log(error);
+		         })
+			},
+// 			修改静态信息
+			changeStatic:(siid)=>{
+				let content = `
+					<div style="padding: 50px; line-height: 22px; font-weight: 300;">
+						
+						<div class="layui-form-item layui-form-text">
+						<label class="layui-form-label" style="font-size:14px;">家具:</label>
+						<div class="layui-input-block">
+						<textarea  id="cfurniture" style="width:100%; font-size:14px; height:60px;  padding-left:1px; border:1px solid #e6e6e6; border-radius:2px;" >
+						</textarea>
+						</div></div>
+						
+						<div class="layui-form-item layui-form-text">
+						<label class="layui-form-label" style="font-size:14px;">浴室:</label>
+						<div class="layui-input-block">
+						<textarea  id="cbath" style="width:100%; font-size:14px; height:60px;  padding-left:1px; border:1px solid #e6e6e6; border-radius:2px;" >
+						</textarea>
+						</div></div>
+						
+						<div class="layui-form-item layui-form-text">
+						<label class="layui-form-label" style="font-size:14px;">休闲:</label>
+						<div class="layui-input-block">
+						<textarea  id="centertainment" style="width:100%; font-size:14px; height:60px;  padding-left:1px; border:1px solid #e6e6e6; border-radius:2px;" >
+						</textarea>
+						</div></div>
+						
+						<div class="layui-form-item layui-form-text">
+						<label class="layui-form-label" style="font-size:14px;">接机:</label>
+						<div class="layui-input-block">
+						<textarea  id="cairport" style="width:100%; font-size:14px; height:60px; padding-left:1px; border:1px solid #e6e6e6; border-radius:2px;" >
+						</textarea>
+						</div></div>
+						
+						<div class="layui-form-item layui-form-text">
+						<label class="layui-form-label" style="font-size:14px;">使用:</label>
+						<div class="layui-input-block">
+						<textarea  id="ccancleRule" style="width:100%; font-size:14px; height:60px;  padding-left:1px; border:1px solid #e6e6e6; border-radius:2px;">
+						</textarea>
+						</div></div>
+						
+						<div class="layui-form-item layui-form-text">
+						<label class="layui-form-label" style="font-size:14px;">取消:</label>
+						<div class="layui-input-block">
+						<textarea id="cuseRule"  style="width:100%; font-size:14px; height:60px;  padding-left:1px; border:1px solid #e6e6e6; border-radius:2px;">
+						</textarea>
+						</div></div>
+						
+					</div>
+					<hr/>
+				`
+				
+				layer.open({
+					area:'600px',
+					title:false,
+					type:1,
+					closeBtn: false,
+					content:content,
+					btn:["确认","退出"],
+					resize:false,
+					move: false,
+					yes:function(index,layero){
+						
+						let info = {};
+						info['si_id']=siid
+						if($('#cfurniture').val().trim()!=''){
+							info['si_furniture']=$('#cfurniture').val().trim();
+						}
+						if($('#cbath').val().trim()!=''){
+							info['si_bath']=$('#cbath').val().trim();
+						}
+						if($('#centertainment').val().trim()!=''){
+							info['si_entertainment']=$('#centertainment').val().trim();
+						}
+						if($('#cairport').val().trim()!=''){
+							info['si_airport']=$('#cairport').val().trim();
+						}
+						if($('#ccancleRule').val().trim()!=''){
+							info['si_cancleRule']=$('#ccancleRule').val().trim();
+						}
+						if($('#cuseRule').val().trim()!=''){
+							info['si_useRule']=$('#cuseRule').val().trim();
+						}
+						axios.put('/Snail/roomStaticInfo/source',Qs.stringify({...info}))
+						.then((res)=>{
+							layer.closeAll();
+							if(res.data=="修改成功！"){
+								layer.open({
+									title:"消息",
+									closeBtn: false,
+									resize:false,
+									move: false,
+									content:"修改成功"
+								})
+							}else{
+								layer.open({
+									title:"消息",
+									closeBtn: false,
+									resize:false,
+									move: false,
+									content:"修改失败"
+								})
+							}
+						})
+					}
+				})
+			},
+// 			添加静态信息
+			addStatic:(rtid)=>{
+				let content = `
+					<div style="padding: 50px; line-height: 22px; font-weight: 300;">
+						
+						<div class="layui-form-item layui-form-text">
+						<label class="layui-form-label" style="font-size:14px;">家具:</label>
+						<div class="layui-input-block">
+						<textarea  id="cfurniture" style="width:100%; font-size:14px; height:60px;  padding-left:1px; border:1px solid #e6e6e6; border-radius:2px;" >
+						</textarea>
+						</div></div>
+						
+						<div class="layui-form-item layui-form-text">
+						<label class="layui-form-label" style="font-size:14px;">浴室:</label>
+						<div class="layui-input-block">
+						<textarea  id="cbath" style="width:100%; font-size:14px; height:60px;  padding-left:1px; border:1px solid #e6e6e6; border-radius:2px;" >
+						</textarea>
+						</div></div>
+						
+						<div class="layui-form-item layui-form-text">
+						<label class="layui-form-label" style="font-size:14px;">休闲:</label>
+						<div class="layui-input-block">
+						<textarea  id="centertainment" style="width:100%; font-size:14px; height:60px;  padding-left:1px; border:1px solid #e6e6e6; border-radius:2px;" >
+						</textarea>
+						</div></div>
+						
+						<div class="layui-form-item layui-form-text">
+						<label class="layui-form-label" style="font-size:14px;">接机:</label>
+						<div class="layui-input-block">
+						<textarea  id="cairport" style="width:100%; font-size:14px; height:60px; padding-left:1px; border:1px solid #e6e6e6; border-radius:2px;" >
+						</textarea>
+						</div></div>
+						
+						<div class="layui-form-item layui-form-text">
+						<label class="layui-form-label" style="font-size:14px;">使用:</label>
+						<div class="layui-input-block">
+						<textarea  id="ccancleRule" style="width:100%; font-size:14px; height:60px;  padding-left:1px; border:1px solid #e6e6e6; border-radius:2px;">
+						</textarea>
+						</div></div>
+						
+						<div class="layui-form-item layui-form-text">
+						<label class="layui-form-label" style="font-size:14px;">取消:</label>
+						<div class="layui-input-block">
+						<textarea id="cuseRule"  style="width:100%; font-size:14px; height:60px;  padding-left:1px; border:1px solid #e6e6e6; border-radius:2px;">
+						</textarea>
+						</div></div>
+						
+					</div>
+					<hr/>
+				`	
+					layer.open({
+					area:'600px',
+					title:false,
+					type:1,
+					closeBtn: false,
+					resize:false,
+					move: false,
+					content:content,
+					btn:["确认","退出"],
+					yes:function(index,layero){
+						
+						let info = {};
+						info['si_rt_id']=rtid
+						if($('#cfurniture').val().trim()!=''){
+							info['si_furniture']=$('#cfurniture').val().trim();
+						}
+						if($('#cbath').val().trim()!=''){
+							info['si_bath']=$('#cbath').val().trim();
+						}
+						if($('#centertainment').val().trim()!=''){
+							info['si_entertainment']=$('#centertainment').val().trim();
+						}
+						if($('#cairport').val().trim()!=''){
+							info['si_airport']=$('#cairport').val().trim();
+						}
+						if($('#ccancleRule').val().trim()!=''){
+							info['si_cancleRule']=$('#ccancleRule').val().trim();
+						}
+						if($('#cuseRule').val().trim()!=''){
+							info['si_useRule']=$('#cuseRule').val().trim();
+						}
+						console.log(info);
+						axios.post('/Snail/roomStaticInfo/source',Qs.stringify({...info}))
+						.then((res)=>{
+							layer.closeAll();
+							if(res.data.result=="添加成功！"){
+								layer.open({
+									title:"消息",
+									closeBtn: false,
+									resize:false,
+									move: false,
+									content:"修改成功"
+								})
+							}else{
+								layer.open({
+									title:"消息",
+									closeBtn: false,
+									resize:false,
+									move: false,
+									content:"修改失败"
+								})
+							}
+						})
+					}
+					
+					})
+			},
+//	 		删除房型
+			deleteRoomType:(rtid)=>{
+				layer.open({
+					title:false,
+					closeBtn: false,
+					resize:false,
+					move: false,
+					content:"确认删除？",
+					btn:["确认","取消"],
+					yes:function(index,layero){
+						layer.closeAll();
+						axios.delete("/Snail/roomType/source",{
+							params:{
+								rt_id:rtid
+							}
+						})
+						.then(response=>{
+							if(response.data=="删除成功！"){
+								vm.getRoomType();
+								layer.open({
+									title:"消息",
+									closeBtn: false,
+									resize:false,
+									move: false,
+									content:"删除成功"
+								})
+							}else{
+								layer.open({
+									title:"消息",
+									closeBtn: false,
+									resize:false,
+									move: false,
+									content:response.data
+								})
+							}
+						})
+					}
+				})
+			},
+// 			添加房型
+			addRoomType:()=>{
+				
+				let content = `
+					<div style="padding: 50px; line-height: 22px; font-weight: 300;">
+						<div class="layui-form-item">
+						<label class="layui-form-label" style="font-size:16px;">房型:</label>
+						<div class="layui-input-block">
+						<input id="artname" type="text" name="title" required  lay-verify="required" style="font-size:16px;" placeholder="请输入房型名称" autocomplete="off" class="layui-input">
+						</div></div>
+						
+						<div class="layui-form-item">
+						<label class="layui-form-label" style="font-size:16px;">人数:</label>
+						<div class="layui-input-block">
+						<input id="artnum" type="text" name="title" required  lay-verify="required" style="font-size:16px;" placeholder="请输入可住人数" autocomplete="off" class="layui-input">
+						</div></div>
+						
+						<div class="layui-form-item">
+						<label class="layui-form-label" style="font-size:16px;">面积:</label>
+						<div class="layui-input-block">
+						<input id="artarea" type="text" name="title" required  lay-verify="required" style="font-size:16px;" placeholder="请输入房型面积" autocomplete="off" class="layui-input">
+						</div></div>
+						
+						<div class="layui-form-item layui-form-text">
+						<label class="layui-form-label" style="font-size:16px;">备注:</label>
+						<div class="layui-input-block">
+						<textarea id="artnote" style="width:100%; font-size:16px; height:60px; padding-left:10px; line-height:38px; border:1px solid #e6e6e6; border-radius:2px;" placeholder="请输入房型描述">
+						</textarea>
+						</div></div>
+						
+					</div><hr>
+				`
+				layer.open({
+					title:"添加房型",
+					type:1,
+					area:'600px',
+					closeBtn: false,
+					resize:false,
+					move: false,
+					content:content,
+					btn:['添加','退出'],
+					yes:function(index,layero){
+						let info = {};
+						info['rt_num']=$('#artnum').val().trim()!=''?$('#artnum').val().trim():'0';
+						info['rt_name']=$('#artname').val().trim();
+						info['rt_area']=$('#artarea').val().trim()!=''?$('#artarea').val().trim():'0';
+						info['rt_note']=$('#artnote').val().trim();
+						info['rt_img']='/Snail/upload/images/defaultImage.jpg';
+						
+						
+						axios.post('/Snail/roomType/source',Qs.stringify({...info}))
+						.then((res)=>{
+							layer.closeAll();
+							if(res.data.result=="添加成功！"){
+								vm.getRoomType();
+								layer.open({
+									title:"消息",
+									closeBtn: false,
+									resize:false,
+									move: false,
+									content:"添加成功"
+								})
+							}else{
+								layer.open({
+									title:"消息",
+									closeBtn: false,
+									resize:false,
+									move: false,
+									content:"添加失败"
+								})
+							}
+							
+						})
+						
+						
+					}
+				})
+			},
+// 			修改房型信息
+			changeRoomType:(index)=>{
+				let fo = vm.roomType[index];
+				
+				let content = `
+					<div style="padding: 50px; line-height: 22px; font-weight: 300;">
+						<div class="layui-form-item">
+						<label class="layui-form-label" style="font-size:16px;">房型:</label>
+						<div class="layui-input-block">
+						<input id="crtname" type="text" name="title" required  lay-verify="required" style="font-size:16px;" placeholder=${fo.rt_name} autocomplete="off" class="layui-input">
+						</div></div>
+						
+						<div class="layui-form-item">
+						<label class="layui-form-label" style="font-size:16px;">人数:</label>
+						<div class="layui-input-block">
+						<input id="crtnum" type="text" name="title" required  lay-verify="required" style="font-size:16px;" placeholder=${fo.rt_num} autocomplete="off" class="layui-input">
+						</div></div>
+						
+						<div class="layui-form-item">
+						<label class="layui-form-label" style="font-size:16px;">面积:</label>
+						<div class="layui-input-block">
+						<input id="crtarea" type="text" name="title" required  lay-verify="required" style="font-size:16px;" placeholder=${fo.rt_area} autocomplete="off" class="layui-input">
+						</div></div>
+						
+						<div class="layui-form-item layui-form-text">
+						<label class="layui-form-label" style="font-size:16px;">备注:</label>
+						<div class="layui-input-block">
+						<textarea id="crtnote" style="width:100%; font-size:16px; height:60px; padding-left:10px; line-height:38px; border:1px solid #e6e6e6; border-radius:2px;">
+						</textarea>
+						</div></div>
+					
+					</div><hr>
+				`
+				
+				layer.open({
+					title:"编辑房型",
+					type:1,
+					area:'600px',
+					closeBtn: false,
+					resize:false,
+					move: false,
+					content:content,
+					btn:['修改','退出'],
+					yes:function(index,layero){
+						let info = {};
+						info['rt_id']=fo.rt_id;
+						if($('#crtnum').val().trim()!=''){
+							info['rt_num']=$('#crtnum').val().trim();
+						}
+						if($('#crtname').val().trim()!=''){
+							info['rt_name']=$('#crtname').val().trim();
+						}
+						if($('#crtarea').val().trim()!=''){
+							info['rt_area']=$('#crtarea').val().trim()
+						}
+						if($('#crtnote').val().trim()!=''){
+							info['rt_note']=$('#crtnote').val().trim();
+						}
+						
+						axios.put('/Snail/roomType/source',Qs.stringify({...info}))
+						.then((res)=>{
+							layer.closeAll();
+							if(res.data=="修改成功！"){
+								vm.getRoomType();
+								layer.open({
+									title:"消息",
+									closeBtn: false,
+									resize:false,
+									move: false,
+									content:"修改成功"
+								})
+							}else{
+								layer.open({
+									title:"消息",
+									closeBtn: false,
+									resize:false,
+									move: false,
+									content:"修改失败"
+								})
+							}
+						})
+					}
+				})
+			},
+			getRoomType:()=>{
+				 axios.get('/Snail/roomType/source/all').then(res => {
+					 vm.roomType=[];
+					 console.log("加载房型");
+					 res.data.forEach(function (value,index) {
+					 	if(value.rt_flage==0){
+					 		vm.roomType.push(value);
+					 	}
+					});
+		         }).catch(function (error) {
+		             console.log(error);
+		         })
+			},
+			showImg:(index)=>{
+				console.log(index);
+				let content='<div class="kk" style="overflow: hidden;" ><img  src="images/default.jpg"></div>';
+				if(vm.roomType[index].rt_img!='default'){
+					content='<div class="kk"><img src='+vm.roomType[index].rt_img+'></div>';
+				}
+				layer.open({
+					title:false,
+					area:'600px',
+					type:1,
+					content:content,
+					btn:false
+				})
+			}
+			
+			
+		},
+		created:()=>{
+			 axios.get('/Snail/roomType/source/all').then(res => {
+				 res.data.forEach(function (value,index) {
+				 	if(value.rt_flage==0){
+				 		vm.roomType.push(value);
+				 	}
+				});
+	         }).catch(function (error) {
+	             console.log(error);
+	         })
+			 
+			 
+	 
+		}
+		
+	})
+	$("#submitFile").click(function(){
+		console.log(1)
+		$("#realSubmit").click();
+	})
+	
+	function saveReport() {
+		$("#modal").css("display","block");
+    	// jquery 表单提交 
+    	$("#saveReportForm").ajaxSubmit(function(message) { 
+    	// 对于表单提交成功后处理，message为提交页面saveReport.htm的返回内容 
+    	console.log(message);
+    	if(message.result=='添加成功！'){
+    		$("#modal").css("display","none");
+			layer.open({
+				title:"消息",
+				closeBtn: false,
+				resize:false,
+				move: false,
+				content:"上传成功",
+				btn:['退出']
+			})
+		}else{
+			$("#modal").css("display","none");
+			layer.open({
+				title:"消息",
+				closeBtn: false,
+				resize:false,
+				move: false,
+				content:"上传失败",
+				btn:['退出']
+			})
+		}
+    	}); 
+    	return false; // 必须返回false，否则表单会自己再做一次提交操作，并且页面跳转 
+    }
+</script>
+</body>
+</html>

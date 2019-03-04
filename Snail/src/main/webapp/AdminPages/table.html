@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>个人信息</title>
+	<meta name="renderer" content="webkit">	
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">	
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">	
+	<meta name="apple-mobile-web-app-capable" content="yes">	
+	<meta name="format-detection" content="telephone=no">	
+	<link rel="stylesheet" type="text/css" href="common/layui/css/layui.css" media="all">
+	<link rel="stylesheet" type="text/css" href="common/bootstrap/css/bootstrap.css" media="all">
+	<link rel="stylesheet" type="text/css" href="common/global.css" media="all">
+	<link rel="stylesheet" type="text/css" href="css/animate.css">
+	<link rel="stylesheet" type="text/css" href="css/personal.css" media="all">
+	<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script src="https://cdn.bootcss.com/qs/6.5.1/qs.min.js"></script>
+	
+</head>
+<body>
+<section class="layui-larry-box">
+	<div class="larry-personal" id="vue-info">
+	    <div class="layui-tab">
+            <blockquote class="layui-elem-quote news_search">
+		
+		<div class="layui-inline" id="inputcss">
+		    <div class="layui-input-inline">
+		    	<input value="" placeholder="订单ID" v-model="o_id" class="layui-input search_input" type="text">
+		    </div>
+		    <div class="layui-input-inline">
+		    	<input value="" placeholder="入住人电话电话" v-model="o_phone" class="layui-input search_input" type="text">
+		    </div>
+		    <div class="layui-input-inline">
+		    	<input value="" placeholder="订单时间" v-model="beginTime" class="layui-input search_input" type="date">
+		    </div>
+		    <div class="layui-input-inline">
+		    	<input value="" placeholder="订单时间" v-model="endTime" class="layui-input search_input" type="date">
+		    </div>
+		    
+		    <div id="ordernum" class="layui-btn search_btn" @click="numbtn">查询</div>
+		    <div id="" class="layui-btn search_btn" @click="reset">重置</div>
+		
+		</div>
+		
+		<div class="layui-inline">
+			<div id="otherNo" class="animated wobble">订单后台查询</div>
+		</div>
+	</blockquote>
+            
+		         <!-- 操作日志 -->
+                <div class="layui-form news_list">
+                    <table class="layui-table">
+					    <colgroup>
+						<col width="10%">
+						<col width="9%">
+						<col width="9%">
+						<col width="9%">
+						<col width="9%">
+						<col width="9%">
+						<col width="9%">
+						<col width="10%">
+						<col width="10%">
+					</colgroup>
+					<thead>
+						<tr>
+							<th style="text-align:left;">订单编号</th>
+							<th>用户电话号码</th>
+							<th>订单电话号码（入住者电话）</th>
+							<th>应付金额（已打折）</th>
+							<th>下单时间</th>
+							<th>支付状态</th>
+							<th>入住时间</th>
+							<th>退房时间</th>
+							<th>查看已预订房间</th>
+							<th>修改订单</th>
+							<th>删除所有名下房间</th>
+						</tr>
+					</thead>
+					
+					<tbody class="news_content">
+						<tr v-for="value in OrderInfo">
+							<td align="left">{{value.o_id}}</td>
+							<td>{{value.o_u_phone}}</td>
+							<td>{{value.o_phone}}</td>
+							<td>{{value.o_r_price}}元</td>
+							<td><!-- input name="show" lay-skin="switch" lay-text="是|否" lay-filter="isShow" type="checkbox">
+								<div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>否</em><i></i></div> -->
+							{{value.o_ordertime}}	
+							</td>
+							<td v-if="value.o_state==0">未支付</td>
+							<td v-if="value.o_state==1">已支付</td>
+							<td>{{value.o_intime}}</td>
+							<td>{{value.o_outtime}}</td>
+							<td>								
+								<a @click.prevent="changePage(value.o_id)" class="layui-btn layui-btn-mini" ><i class="iconfont icon-edit"></i> 订单详情</a>
+							</td>
+							<td>		
+								<a class="layui-btn layui-btn-normal layui-btn-mini" @click="del(value.o_id)"><i class="layui-icon"></i>修改订单 </a>
+							</td>
+							<td>
+								<a class="layui-btn layui-btn-danger layui-btn-mini" @click.prevent="del(value.o_id)"><i class="layui-icon"></i> 删除所有</a>
+							</td>
+						</tr>
+					</tbody>
+					
+					</table>
+					
+					<!-- 分页 -->
+						<!-- <div class="btn"> -->
+							<button type="button" @click="lastPage" class="btn btn-primary btn-sm">上一页</button>
+							<button class="btn btn-primary btn-sm">
+							&nbsp<span>{{currentPage}}/{{totalPage}} </span>&nbsp
+							</button>
+							<button type="button" @click="nextPage" class="btn btn-primary btn-sm">下一页</button>
+						<!-- </div> -->
+			    </div>
+			    
+			    
+			     <!-- 登录日志 -->
+			    <div class="layui-tab-item layui-field-box">
+			          <table class="layui-table table-hover" lay-even="" lay-skin="nob">
+                           <thead>
+                              <tr>
+                                  <th><input type="checkbox" id="selected-all"></th>
+                                  <th>ID</th>
+                                  <th>管理员账号</th>
+                                  <th>状态</th>
+                                  <th>最后登录时间</th>
+                                  <th>上次登录IP</th>
+                                  <th>登录IP</th>
+                                  <th>IP所在位置</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td><input type="checkbox"></td>
+                                <td>110</td>
+                                <td>admin</td>
+                                <td>后台登录成功</td>
+                                <td>2016-12-19 14:26:03</td>
+                                <td>127.0.0.1</td>
+                                <td>127.0.0.1</td>
+                                <td>Unknown</td>
+                              </tr>
+                            </tbody>
+			          </table>
+			          <div class="larry-table-page clearfix">
+                          <a href="javascript:;" class="layui-btn layui-btn-small"><i class="iconfont icon-shanchu1"></i>删除</a>
+				          <div id="page2" class="page"></div>
+			         </div>
+			    </div>
+		    </div>
+		</div>
+	
+</section>
+<script type="text/javascript" src="common/layui/layui.js"></script>
+<script type="text/javascript" src="js/newslist.js"></script>
+<script type="text/javascript">
+	
+   	var vm = new Vue({
+        el: '#vue-info',      //div的id
+        data: {
+        	OrderInfo:"",    //数据，名称自定,v-for的循环
+        	qiantai:"",
+        	o_id : "",
+        	o_phone:"",
+        	beginTime:"",
+        	endTime:"",
+        	currentPage:"1",
+        	totalPage:"1",
+        	searchType:"1"      //1是初始查询，2是条件查询
+        },
+        created: function () { //created方法，页面初始调用    
+            axios.defaults.withCredentials = true;
+            /* var url = "/Snail/order/all";
+     	    axios.get(url).then(function (res) {   //ajax请求封装
+            	vm.OrderInfo = res.data;
+            }, function (response) {     //返回失败方法调用，暂不处理
+                console.info(response);
+            })  */
+            
+        },
+        mounted:function(){
+        	this.findOrder(this.currentPage);
+        },
+        methods:{
+        	
+        	changePage:function(oid,irnum){
+        		location.href="table3.html?o_id="+oid;
+        	},
+        	
+        	numbtn:function(){
+        		this.currentPage =1;
+        		this.OrderInfo = [];
+        		
+        		if(this.o_id==""&&this.o_phone==""&&this.beginTime==""&&this.endTime==""){
+        			this.searchType=1;
+        		}else{
+        			this.searchType=2;
+        		}
+        		if(this.searchType==1){
+        			this.findOrder(1);
+        		}else{
+        			this.findTimeOrder();
+        		}
+        		console.log(this.OrderInfo)
+        	},
+        	del:function(di){
+        		layer.open({
+        			content:"确定删除?",
+        			btn:["确定","取消"],
+        			yes:function(index, layero){
+        				layer.closeAll();
+        				axios.delete('/Snail/order/quitOrder',{
+                			params:{o_id:di}
+                		})
+                		.then(function(response){
+                			if(response.data.message=="取消订单成功"){
+                				layer.open({
+                					title: '消息'
+                					,content: '删除成功'
+                				})
+                				vm.findOrder(this.currentPage);
+                			}else{
+                				layer.open({
+                					title: '消息'
+                					,content: '删除失败'
+                				})
+                			}
+                		})
+        			}
+        		})
+        		
+        		
+        	},
+        nextPage:function(){
+        	if(this.searchType==1&&this.currentPage-this.totalPage<0){
+				this.currentPage++;
+				this.findOrder(this.currentPage);
+			}else{
+				if(this.currentPage-this.totalPage<0){
+				this.OrderInfo.length = 0;
+				this.currentPage++;
+				this.arrayChange();
+				}
+			}
+        	
+		},
+		lastPage:function(){
+			if(this.searchType==1&&this.currentPage>1){
+				this.currentPage--;
+				this.findOrder(this.currentPage);
+				
+			}else{
+				if(this.currentPage>1){
+				this.OrderInfo.length = 0;
+				this.currentPage--;
+				this.arrayChange();
+				}
+			}
+		},
+		findOrder:function(page){
+			
+			axios.post('/Snail/order/all',Qs.stringify({
+				page:page,
+			})).then(function(response){
+				vm.OrderInfo = response.data.orderList;
+				var totalPage=response.data.totalPage;
+				vm.totalPage=totalPage;
+				console.log(response.data.orderList)
+        	
+       		 })
+  		},
+  		
+  		findTimeOrder:function(){
+  			var sm = this.o_id;
+    		var ophone = this.o_phone;
+    		var begin = this.beginTime;
+    		var end = this.endTime;
+			axios.get('/Snail/order/findTimeOrder',
+					{params:{o_id:sm,
+					o_phone:ophone,
+					beginTime:begin,
+					endTime:end}
+					}
+			).then(function(response){
+				vm.qiantai = response.data.orderAny;
+				console.log(typeof(vm.qiantai[1]));
+       		 })
+       		 .then(()=>{
+       			vm.arrayChange();
+       		 })
+  		},
+  		
+  		arrayChange:function(){
+  			this.OrderInfo = [];
+  			var y = this.currentPage;
+  			var j = (this.currentPage-1)*5;
+			for(let i=j;i<y*5;i++){
+				if(this.qiantai[i]==undefined){
+					break;
+				}
+				this.OrderInfo.push(this.qiantai[i]);
+			}
+			if(this.qiantai.length%5==0&&this.qiantai!=null&&this.qiantai!=''){
+				this.totalPage=this.qiantai.length/5;
+			}else{
+				this.totalPage= parseInt((this.qiantai.length)/5)+1;
+			}
+			console.log(this.OrderInfo);
+  		},
+  		reset:function(){
+  			vm.o_id ="",
+  			vm.o_phone="",
+  			vm.beginTime="",
+  			vm.endTime="",
+  			vm.currentPage="1",
+  			vm.totalPage="1",
+  			vm.OrderInfo="";
+  			vm.qiantai="",
+  			vm.searchType="1",
+  			this.findOrder(1);
+  		}
+  		
+  		
+      }
+  });
+
+    
+</script>
+</body>
+</html>

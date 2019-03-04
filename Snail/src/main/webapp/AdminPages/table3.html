@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>个人信息</title>
+	<meta name="renderer" content="webkit">	
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">	
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">	
+	<meta name="apple-mobile-web-app-capable" content="yes">	
+	<meta name="format-detection" content="telephone=no">	
+	<link rel="stylesheet" type="text/css" href="common/layui/css/layui.css" media="all">
+	<link rel="stylesheet" type="text/css" href="common/bootstrap/css/bootstrap.css" media="all">
+	<link rel="stylesheet" type="text/css" href="common/global.css" media="all">
+	<link rel="stylesheet" type="text/css" href="css/personal.css" media="all">
+	<link rel="stylesheet" type="text/css" href="css/animate.css">
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script src="https://cdn.bootcss.com/qs/6.5.1/qs.min.js"></script>
+	<script type="text/javascript" src="common/layui/layui.js"></script>
+	<script type="text/javascript" src="js/newslist.js"></script>
+	
+</head>
+<body>
+<section class="layui-larry-box">
+	<div class="larry-personal" id="vue-info">
+	    <div class="layui-tab">
+            <blockquote class="layui-elem-quote news_search">
+		
+		<div class="layui-inline">
+		
+		</div>
+		
+		<div class="layui-inline">
+			<div class="layui-form-mid layui-word-aux animated bounceInRight">本页面刷新后除新添加的文章外所有操作无效，关闭页面所有数据重置</div>
+		</div>
+	</blockquote>
+            
+		         <!-- 操作日志 -->
+                <div class="layui-form news_list">
+                    <table class="layui-table">
+					    <colgroup>
+						<col width="20%">
+						<col width="20%">
+						<col width="20%">
+						<col width="20%">
+						<col width="20%">
+					</colgroup>
+					<thead>
+						<tr>
+							<th style="text-align:left;">订单编号</th>
+							<th>房间ID</th>
+							<th>房间号</th>
+							<th>房间实际单价</th>
+							<th>入住</th>
+						</tr>
+					</thead>
+					<tbody class="news_content">
+						<tr v-for="value in OrderInfo">
+							<td align="left">{{value.i_o_id}}</td>
+							<td>{{value.i_r_id}}</td>
+							<td>{{value.i_r_num}}号房</td>
+							<td>{{value.i_r_price}}元</td>
+							<td>			 						
+								<a class="layui-btn layui-btn-mini " @click.prevent="goin(value.i_r_num,value.i_o_id)"><i class="iconfont icon-edit"></i>入住</a>
+							</td>
+						</tr>
+					</tbody>
+					</table>
+					
+					<!-- 分页 -->
+
+
+			    </div>
+			    
+			    
+			     <!-- 登录日志 -->
+			    <div class="layui-tab-item layui-field-box">
+			          <table class="layui-table table-hover" lay-even="" lay-skin="nob">
+                           <thead>
+                              <tr>
+                                  <th><input type="checkbox" id="selected-all"></th>
+                                  <th>ID</th>
+                                  <th>管理员账号</th>
+                                  <th>状态</th>
+                                  <th>最后登录时间</th>
+                                  <th>上次登录IP</th>
+                                  <th>登录IP</th>
+                                  <th>IP所在位置</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td><input type="checkbox"></td>
+                                <td>110</td>
+                                <td>admin</td>
+                                <td>后台登录成功</td>
+                                <td>2016-12-19 14:26:03</td>
+                                <td>127.0.0.1</td>
+                                <td>127.0.0.1</td>
+                                <td>Unknown</td>
+                              </tr>
+                            </tbody>
+			          </table>
+			          <div class="larry-table-page clearfix">
+                          <a href="javascript:;" class="layui-btn layui-btn-small"><i class="iconfont icon-shanchu1"></i>删除</a>
+				          <div id="page2" class="page"></div>
+			         </div>
+			    </div>
+		    </div>
+		</div>
+</section>
+
+<script type="text/javascript">
+	
+   	var vm = new Vue({
+        el: '#vue-info',      //div的id
+        data: {
+        	OrderInfo: "",
+        	oid:"",
+        	irnum:""
+        },
+        created: function () { //created方法，页面初始调用  
+        	axios.defaults.withCredentials = true;
+        	this.oid = this.getUrlParam("o_id");
+            var url = "/Snail/order/queryOrderInfoByi_o_id";
+            var sm = this.oid;
+     	    axios.get(url,{
+     	    	params:{i_o_id:sm}
+     	    }).then(function (res) {   //ajax请求封装
+            	vm.OrderInfo = res.data;
+            }, function (response) {     //返回失败方法调用，暂不处理
+                console.info(response);
+            }) 
+        },
+        mounted:function(){
+        	
+        },
+        methods:{
+        	getUrlParam:function(name){
+        		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        		 var r = window.location.search.substr(1).match(reg);
+        		 if (r != null) return decodeURIComponent(r[2]); return null;
+        	},
+        	goin:function(oid,rnum){
+        		console.log(oid);
+        		console.log(rnum);
+        		content = `
+        		<div class="add_box">	
+        			<div class='someother'>
+	    			 	 订单编号:${oid}
+		    			   </div>
+		    			<div class='someother'>
+	    			 	 房间号:${rnum}
+		    			 </div>
+		    			 <div style="clear:both;"></div>
+        					<div class=''>
+	 		    			 <input id='ccard' placeholder='身份证' class='' type='text'>
+	 		    			  </div>
+	 		    			<div class=''>
+	 		    			  <input id='nname' placeholder='姓名' class='' type='text'>
+	 		    			</div>
+	 		    			  <div class=''>
+	 				    	  <select id='ssex' class='' type='text'>
+	 				    	  <option>请选择性别</option>
+	 				       	  <option value='男'>男</option>
+	 				    	  <option value='女'>女</option>
+	 				    	  </select>
+ 				  			</div>
+ 				  			</div>`;
+        		layer.open({
+    				title:'添加入住',
+    				closeBtn: false,
+    				type:1,
+    				area:'600px;',
+    				content:content,
+    				btn:['添加','退出'],
+    				yes:(index,layero)=>{
+	
+    					layer.closeAll();
+    					axios.post('/Snail/order/addLive',Qs.stringify({
+    						l_uid:$("#ccard").val(),
+    						l_uname:$("#nname").val(),
+    						l_usex:$("#ssex").val(),
+    						l_o_id:oid,
+    						l_r_num:rnum
+    					})).then((res)=>{
+    						console.log(res.data);
+    						if(res.data.result=="插入成功"){
+    							layer.open({
+    								title:"消息",
+    								closeBtn: false,
+    								content:"添加成功"
+    							})
+    						/* 	vm.searchRoom(); */
+    						}else{
+    							layer.open({
+    								title:"消息",
+    								closeBtn: false,
+    								content:"添加失败"
+    							})
+    						}
+    					})
+    				} 
+    			})
+
+        	}
+      }
+        
+  });
+
+    
+</script>
+</body>
+</html>

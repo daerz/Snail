@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>个人信息</title>
+	<meta name="renderer" content="webkit">	
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">	
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">	
+	<meta name="apple-mobile-web-app-capable" content="yes">	
+	<meta name="format-detection" content="telephone=no">	
+	<link rel="stylesheet" type="text/css" href="common/layui/css/layui.css" media="all">
+	<link rel="stylesheet" type="text/css" href="common/bootstrap/css/bootstrap.css" media="all">
+	<link rel="stylesheet" type="text/css" href="common/global.css" media="all">
+	<link rel="stylesheet" type="text/css" href="css/personal.css" media="all">
+	<script type="text/javascript" src="js/vue-axios.js"></script>	
+	<script type="text/javascript" src="js/vue.js"></script>
+	<script type="text/javascript" src="js/qs.js"></script>
+</head>
+<body>
+<section class="layui-larry-box">
+	<div class="larry-personal" id="mif">
+	    <div class="layui-tab">
+            <blockquote class="layui-elem-quote news_search">
+		<div class="layui-inline">
+		    <div class="layui-input-inline">
+		    	<input value="" placeholder="请输入用户名" class="layui-input search_input" type="text" v-model="userPhone">
+		    </div>
+		    <a class="layui-btn" @click="searchUser">查询</a>
+		    <a class="layui-btn layui-btn-normal" @click="setCount">折扣设置</a>
+		</div>
+		
+	</blockquote>
+            
+		         <!-- 操作日志 -->
+                <div class="layui-form news_list">
+                    <table class="layui-table">
+					    <colgroup>
+						<col width="10%">
+						<col width="40%">
+						<col width="30%">
+						<col width="20%">
+					</colgroup>
+					<thead>
+						<tr>
+							<th>id</th>
+							<th>用户名</th>
+							<th>会员等级</th>
+							<th>修改会员等级</th>
+						</tr>
+					</thead>
+					<tbody class="news_content" v-for="item in arr">
+						<tr>
+							<td>{{item.u_id}}</td>
+							<td>{{item.u_phone}}</td>
+							<td>{{role[item.code-1]}}</td>
+							<td>
+								<a class="layui-btn layui-btn-mini" @click="updateCode(item.u_phone)"><i class="iconfont icon-edit"></i> 修改会员等级</a>
+							</td>
+						</tr>
+					</tbody>
+					</table>
+                     <div class="larry-table-page clearfix">
+				          <div id="page" class="page"></div>
+			         </div>
+			    </div>
+		    </div>
+		</div>
+	
+</section>
+<script type="text/javascript" src="common/layui/layui.js"></script>
+<script type="text/javascript" src="js/newslist.js"></script>
+<script type="text/javascript">
+var vm = new Vue({
+	el:"#mif",
+	data:{
+		searchType:1,
+		pageNum:1,
+		arr:[],
+		pages:1,
+		role:["普通会员","白银会员","黄金会员","白金会员"],
+		userPhone:"",
+		viparr:[],
+		phonePattern:/^1([38][0-9]|4[579]|5[0-3,5-9]|6[6]|7[0135678]|9[89])\d{8}$/
+	},
+	methods:{
+		getUser:function(){
+			let pageN = this.pageNum;
+			axios.get("/Snail/users/user",{
+	        	  params:{
+		        	  	page:pageN
+	        	  	}
+	        	  })
+	          .then(response=>{
+	        	  return response.data;
+	          })
+	          .then(data=>{
+	        	  this.arr = data.list;
+	          })
+		},
+		updateCode:function(name){
+			layer.open({
+				title:"修改"+name+"会员等级",
+				content:`<select id="code" style="width:100%; height:36px; font-size:16px; padding-left:8px;">
+		     		<option value="1">普通会员</option>
+		     		<option value="2">白银会员</option>
+		     		<option value="3">黄金会员</option>
+		     		<option value="4">白金会员</option>
+		     	</select>`,
+				btn: ['保存', '取消'], //可以无限个按钮
+				yes:function(index, layero){
+					layer.closeAll();
+					axios.put("/Snail/users/vip",
+						Qs.stringify({
+							v_code:$("#code").val(),
+							phone:name
+						})
+					)
+					.then(response=>{
+						if(response.data){
+							if(vm.searchType==1){
+								vm.getUser();
+							}else{
+								vm.searchUser();
+							}
+							layer.open({
+								  content: '修改成功'
+								}); 
+						}else{
+							layer.open({
+								  content: '修改失败'
+								});
+						}
+					})
+					
+				}
+			})
+		},
+		searchUser:function(){
+			if(this.userPhone==""){
+				this.searchType=1;
+				this.getUser();
+				return;
+			}
+			if(!((this.phonePattern).test(this.userPhone))){
+				layer.open({
+					content:"手机号码格式有误"
+				});
+				return;
+			}
+			axios.get("/Snail/users/vip/"+this.userPhone)
+			.then(response=>{
+				return response.data;
+			})
+			.then(data=>{
+				if(data==""){
+					layer.open({
+						content:"未查询到该会员"
+					})
+				}else{
+					this.searchType=2;
+					this.arr = [{
+						u_id:data.u_id,
+						u_phone:this.userPhone,
+						code:data.v_code
+					}];
+					layui.laypage({
+						cont: 'page',
+						pages: 1 //总页数
+							,
+						groups: 5 //连续显示分页数
+							,
+						jump: function(obj, first) {
+							//得到了当前页，用于向服务端请求对应数据
+							var curr = obj.curr;
+							if(!first) {
+								vm.pageNum = obj.curr;
+								vm.getUser();
+							}
+						}
+					});
+				}
+			})
+		},
+		setCount:function(){
+			axios.get("/Snail/users/dis")
+			.then(response=>{
+				return response.data;
+			})
+			.then(data=>{
+				vm.viparr = data;
+			})
+			.then(()=>{
+				layer.open({
+					title:"设置会员折扣",
+					btn:["取消"],
+					area:"400px",
+					content:`<form class="layui-form">
+								<div class="layui-form-item">
+						    		<label class="layui-form-label" style="width:160px !important;">普通会员：`+vm.viparr[0].d_dis.toFixed(2)+`</label>
+								    <div class="layui-input-block" style="position:relative;">
+								      <input type="text" name="title" lay-verify="title" style="width:40% !important;" autocomplete="off" placeholder="请输入折扣" class="layui-input" id="count`+vm.viparr[0].d_class+`">
+								      <button type="button" class="layui-btn layui-btn-normal" style="position:absolute; right:0; top:0;" onclick="changeCount(`+vm.viparr[0].d_class+`)">修改折扣</button>
+								    </div>
+						  		</div>
+						  		<div class="layui-form-item">
+						    		<label class="layui-form-label" style="width:160px !important;">白银会员：`+vm.viparr[1].d_dis.toFixed(2)+`</label>
+								    <div class="layui-input-block" style="position:relative;">
+								      <input type="text" name="title" lay-verify="title" style="width:40% !important;" autocomplete="off" placeholder="请输入折扣" class="layui-input" id="count`+vm.viparr[1].d_class+`">
+								      <button type="button" class="layui-btn layui-btn-normal" style="position:absolute; right:0; top:0;" onclick="changeCount(`+vm.viparr[1].d_class+`)">修改折扣</button>
+								    </div>
+						  		</div>
+						  		<div class="layui-form-item">
+						    		<label class="layui-form-label" style="width:160px !important;">黄金会员：`+vm.viparr[2].d_dis.toFixed(2)+`</label>
+								    <div class="layui-input-block" style="position:relative;">
+								      <input type="text" name="title" lay-verify="title" style="width:40% !important;" autocomplete="off" placeholder="请输入折扣" class="layui-input" id="count`+vm.viparr[2].d_class+`">
+								      <button type="button" class="layui-btn layui-btn-normal" style="position:absolute; right:0; top:0;" onclick="changeCount(`+vm.viparr[2].d_class+`)">修改折扣</button>
+								    </div>
+						  		</div>
+						  		<div class="layui-form-item">
+						    		<label class="layui-form-label" style="width:160px !important;">白金会员：`+vm.viparr[3].d_dis.toFixed(2)+`</label>
+								    <div class="layui-input-block" style="position:relative;">
+								      <input type="text" name="title" lay-verify="title" style="width:40% !important;" autocomplete="off" placeholder="请输入折扣" class="layui-input" id="count`+vm.viparr[3].d_class+`">
+								      <button type="button" class="layui-btn layui-btn-normal" style="position:absolute; right:0; top:0;" onclick="changeCount(`+vm.viparr[3].d_class+`)">修改折扣</button>
+								    </div>
+						  		</div>
+							</form>`
+				})
+			})
+		},
+		changeLayPage:function(){
+			layui.laypage({
+					cont: 'page',
+					pages: vm.pages //总页数
+						,
+					groups: 5 //连续显示分页数
+						,
+					jump: function(obj, first) {
+						//得到了当前页，用于向服务端请求对应数据
+						var curr = obj.curr;
+						if(!first) {
+							vm.pageNum = obj.curr;
+							vm.getUser();
+						}
+					}
+				});
+		}
+	},
+	created:function(){
+		axios.defaults.withCredentials = true;
+		axios.get("/Snail/users/user?page=1")
+		.then(response=>{return response.data})
+		.then(data=>{vm.pages=data.page})
+	},
+	mounted:function(){
+		this.getUser();
+		layui.use(['jquery','layer','element','laypage'],function(){
+		      window.jQuery = window.$ = layui.jquery;
+		      window.layer = layui.layer;
+	          var element = layui.element(),
+	              laypage = layui.laypage;
+	          vm.changeLayPage();
+	    });
+	}
+})
+
+var changeCount = function(id){
+	let count = $("#count"+id).val();
+	if(count==""||count<=0||count>1){
+		layer.open({
+			content:"请输入正确的折扣值"
+		});	
+		return;
+	}
+	axios.put("/Snail/users/dis",Qs.stringify({
+		d_class:id,
+		d_dis:count
+	}))
+	.then(response=>{
+		if(response.data){
+			vm.setCount();
+		}else{
+			layer.open({
+				content:"修改失败"
+			});	
+		}
+	})
+}
+	
+</script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+   <mapper namespace="com.project.dao.IMaintainDAO">
+ 
+<!-- ====================维护表============================ -->
+	
+	<select id="selectByTerm" parameterType="com.project.bean.MaintainBean" resultType="com.project.bean.MaintainBean">
+   		select * from maintain
+   		<where>
+   		m_flage = 0
+   		<if test=" m_id != 0 "> and m_id = #{m_id}</if>
+   		<if test="m_r_id != 0"> and m_r_id = #{m_r_id}</if>
+   		<if test="m_date != null and m_date != '' "> and m_date= #{m_date}</if>
+   		<if test="m_result == 1 or m_result == 2"> and m_result = #{m_result}</if>
+   		</where>
+   </select>
+	
+   	<update id="updateMaintain" parameterType="com.project.bean.MaintainBean">
+    	update maintain 
+    	<set>
+    		m_id = #{m_id},
+    		<if test="m_r_id != 0 ">m_r_id = #{m_r_id},</if>
+    		<if test="m_info != '' and m_info != null">m_info = #{m_info},</if>
+    		<if test="m_result == 1 or m_result == 2">m_result = #{m_result},</if>
+    		<if test="m_flage == 1 ">m_flage = #{m_flage}</if>
+    	</set>
+    	where m_id = #{m_id};
+    </update>
+    
+   </mapper>

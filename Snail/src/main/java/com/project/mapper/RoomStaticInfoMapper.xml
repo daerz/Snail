@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ==================房型静态信息表===================== -->
+
+<mapper namespace="com.project.dao.IRoomStaticInfoDao">
+	<update id="updateRoomStaticInfo" parameterType="com.project.bean.RoomStaticInfoBean">
+		update roomstaticinfo 
+		<trim prefix = "set" suffixOverrides = "," suffix = "where si_id = #{si_id};">
+			si_id = #{si_id},
+			<if test="si_bath != null and si_bath != ''">si_bath = #{si_bath},</if>
+			<if test="si_furniture != null and si_furniture != ''">si_furniture = #{si_furniture},</if>
+			<if test="si_entertainment != null and si_entertainment != ''">si_entertainment = #{si_entertainment},</if>
+			<if test="si_airport != null and si_airport != ''">si_airport = #{si_airport},</if>
+			<if test="si_cancleRule != null and si_cancleRule != ''">si_canclerule = #{si_cancleRule},</if>
+			<if test="si_useRule != null and si_useRule != ''">si_userule = #{si_useRule},</if>
+			<if test="si_rt_id != 0">si_rt_id = #{si_rt_id},</if>
+		</trim>
+	</update>
+	
+	<insert id="insertRoomStaticInfo" parameterType="com.project.bean.RoomStaticInfoBean">
+		insert into roomstaticinfo(si_rt_id,si_furniture,si_bath,
+		si_entertainment,si_airport,si_canclerule,si_userule) 
+		values(#{si_rt_id},#{si_furniture},#{si_bath},#{si_entertainment},
+		#{si_airport},#{si_cancleRule},#{si_useRule});
+	</insert>
+</mapper>

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+   <mapper namespace="com.project.dao.IOrderDao">
+   
+     	<!-- ==========================resultMap============================== -->	
+  	
+	<resultMap id="map" type="com.project.bean.OrderBean">
+		<id property="o_id" column="o_id"></id>
+		<result property="o_u_phone" column="o_u_phone"></result>
+		<result property="o_phone" column="o_phone"></result>
+		<result property="o_r_price" column="o_r_price"></result>
+		<result property="o_ordertime" column="o_ordertime"></result>
+		<result property="o_state" column="o_state"></result>
+		<result property="o_intime" column="o_intime"></result>
+		<result property="o_outtime" column="o_outtime"></result>
+		<result property="o_flag" column="o_flag"></result>
+		<!-- 映射一个集合对象 -->
+		<collection property="listOrderInfo" ofType="com.project.bean.OrderInfoBean">
+			<id property="i_id" column="i_id"></id>
+			<result property="i_r_id" column="i_r_id"></result>
+			<result property="i_o_id" column="i_o_id"></result>
+			<result property="i_flag" column="i_flag"></result>
+			<result property="i_r_price" column="i_r_price"></result>
+			<result property="i_r_num" column="i_r_num"/>
+		</collection>
+
+	</resultMap>
+	
+   <!-- ======================update =======================-->
+   
+    <update id="updateOrderByOid" parameterType="com.project.bean.OrderBean" >
+    	update t_order
+    	<set>
+    		o_id = #{o_id}
+    		<if test="o_u_phone != null and o_u_phone != ''"> ,o_u_phone = #{o_u_phone}</if>
+    		<if test="o_phone != null and o_phone != ''">,o_phone = #{o_phone}</if>
+    		<if test="o_r_price >0 ">,o_r_price = #{o_r_price}</if>
+    		<if test="o_ordertime != null and o_ordertime != ''">,o_state = #{o_state}</if>
+    		<if test="o_state != null">,o_state = #{o_state}</if>
+    		<if test="o_flag != null">,o_flag = #{o_flag}</if>
+    	</set>
+    	where o_id = #{o_id};
+    </update>
+  
+  					<!-- OrderInfo -->
+  	<update id="updateOrderInfo" parameterType="com.project.bean.OrderInfoBean">
+  		update t_orderinfo
+  		<set>
+  			i_id = #{i_id},
+  			<if test="i_r_id != null">i_r_id = #{i_r_id},</if>
+  			<if test="i_o_id != null">i_o_id = #{i_o_id},</if>
+  			<if test="i_r_num != null">i_r_num = #{i_r_num},</if>
+  		</set>
+  		where i_o_id = #{i_o_id};
+  	</update>
+  	
+  	<update id="updateEdit" parameterType="com.project.bean.LiveBean">
+  		update t_live
+  		<set>
+  			l_id = #{l_id}
+  			<if test="l_uid != null and l_uid != ''">,l_uid = #{l_uid}</if>
+  			<if test=" l_uname != null and l_uname != '' ">,l_uname = #{l_uname}</if>
+    		<if test=" l_usex != null and l_usex != '' ">,l_usex = #{l_usex}</if>
+  		</set>
+  		<where>
+  			l_flag =1 and l_id = #{l_id}
+  		</where>
+  	</update>
+  
+    <!--========================= select  ===========================  -->
+    
+    <select id="selectLive" parameterType="com.project.bean.LiveBean" resultType="com.project.bean.LiveBean">
+    	select * from t_live
+    	<where>
+    		1=1
+    		<if test=" l_uid != null and l_uid != '' "> and l_uid = #{l_uid}</if>
+    		<if test=" l_uname != null and l_uname != '' "> and l_uname = #{l_uname}</if>
+    		<if test=" l_usex != null and l_usex != '' "> and l_usex = #{l_usex}</if>
+    		<if test=" l_o_id != null and l_o_id != '' "> and l_o_id = #{l_o_id}</if>
+    		<if test=" l_intime != null and l_intime != '' "> and l_intime = #{l_intime}</if>
+    		<if test=" l_outtime != null and l_outtime != '' "> and l_outtime = #{l_outtime}</if>
+    		<if test=" l_o_outtime != null and l_o_outtime != '' "> and l_o_outtime = #{l_o_outtime}</if>
+    		<if test=" l_r_num != 0"> and l_r_num = #{l_r_num}</if>
+    		<if test=" l_flag != 0"> and l_flag = #{l_flag}</if>
+    	</where>
+    	order by l_id desc
+    </select>
+    
+    <select id="selectLiveNum" parameterType="com.project.bean.LiveBean">
+    	select count(*) from t_live
+    	<where>
+    		1=1
+    		<if test=" l_uid != null and l_uid != '' "> and l_uid = #{l_uid}</if>
+    		<if test=" l_uname != null and l_uname != '' "> and l_uname = #{l_uname}</if>
+    		<if test=" l_usex != null and l_usex != '' "> and l_usex = #{l_usex}</if>
+    		<if test=" l_o_id != null and l_o_id != '' "> and l_o_id = #{l_o_id}</if>
+    		<if test=" l_intime != null and l_intime != '' "> and l_intime = #{l_intime}</if>
+    		<if test=" l_outtime != null and l_outtime != '' "> and l_outtime = #{l_outtime}</if>
+    		<if test=" l_r_num != 0"> and l_r_num = #{l_r_num}</if>
+    		<if test=" l_flag != 0"> and l_flag = #{l_flag}</if>
+    	</where>
+    </select>
+    
+      <select id="findOrderAllAndAll" parameterType="com.project.bean.OrderBean" resultMap="map">
+    	select * from
+		t_order o join t_orderinfo f
+		on o.o_id=f.i_o_id
+    	<where>
+    		1=1
+    		<if test="o_id != null and o_id != '' "> and o_id = #{o_id}</if>
+    		<if test="o_u_phone != null and o_u_phone != '' "> and o_u_phone = #{o_u_phone}</if>
+    		<if test="o_phone != null and o_phone != '' "> and o_phone = #{o_phone}</if>
+    		<if test="o_r_price != 0"> and o_r_price = #{o_r_price}</if>
+    		<if test="o_ordertime != null and o_ordertime != ''"> and o_ordertime = #{o_ordertime}</if>
+
+    		<if test="o_intime != null and o_intime != ''"> and o_intime = #{o_intime}</if>
+    		<if test="o_outtime != null and o_outtime != ''"> and o_outtime = #{o_outtime}</if>
+
+    		 and o_flag = 0
+
+    	</where>
+    </select>
+    
+	<select id="selectOrderOneByOid" parameterType="String" resultMap="map">
+		select * from
+		t_order o join t_orderinfo f 
+		on o.o_id=f.i_o_id
+		where o_id=#{o_id}and o_flag =0;
+	</select>
+
+	
+	
+	<select id="selectOrderAllByPhone" parameterType="int" resultMap="map">
+		select * from
+		t_order o join t_orderinfo f 
+		on o.o_id=f.i_o_id
+		where o_u_phone=#{o_u_phone} and o_flag =0;
+	</select>
+
+	<select id="selectOrderOneByPhone" parameterType="int" resultMap="map">
+		select * from
+		t_order o join t_orderinfo f 
+		on o.o_id=f.i_o_id
+		where o_phone=#{o_phone} and o_flag =0;
+	</select>
+	
+	<select id="selectOrderOneByRid" parameterType="int" resultType="com.project.bean.OrderInfoBean">
+		select * from
+		 t_orderinfo 
+		where o_r_id=#{o_r_id} and o_flag =0;
+	</select>
+	
+	<select id="selectOrderAllByIntime" parameterType="int" resultMap="map">
+		select * from
+		t_order o join t_orderinfo f 
+		on o.o_id=f.i_o_id
+		where intime=#{intime} and o_flag =0;
+	</select>
+	
+	<select id="selectOrderAllByOuttime" parameterType="int" resultMap="map">
+		select * from
+		t_order o join t_orderinfo f 
+		on o.o_id=f.i_o_id
+		where outtime=#{outtime} and o_flag =0;
+	</select>
+	
+
+	<select id="selectOrderInfoByOid" parameterType="String" resultType="com.project.bean.OrderInfoBean">
+	select * from t_orderinfo where i_o_id = #{i_o_id} and i_flag=0;
+	
+	</select>
+
+
+	<select id="selectOrderByPage" parameterType="com.project.bean.OrderConditionBean" resultType="com.project.bean.OrderBean" > 
+		select * from t_order  where o_u_phone = #{o_u_phone} and o_flag = 0 ORDER BY o_ordertime DESC LIMIT #{limitNum},5;
+	</select>
+
+
+
+
+
+
+	<!--======== insert================ -->
+	<insert id="insertOrderInfo"  parameterType="java.util.List" >
+		insert into t_orderinfo (i_r_id,i_o_id,i_r_price,i_r_num) values
+		<foreach collection="list" item="item" index="index" separator=",">
+		(
+			#{item.i_r_id},
+			#{item.i_o_id},
+			#{item.i_r_price},
+			#{item.i_r_num}
+		)
+		</foreach>
+	</insert>
+
+
+
+
+
+
+</mapper>

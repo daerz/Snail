@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Panagea - Premium site template for travel agencies, hotels and restaurant listing.">
+    <meta name="author" content="Ansonika">
+    <title>Snail | 忘记密码</title>
+<!-- 拼图验证 -->
+				<link rel="stylesheet" href="css/jigsaw.css">
+    <!-- Favicons-->
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" type="image/x-icon" href="img/apple-touch-icon-57x57-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="72x72" href="img/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="114x114" href="img/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="144x144" href="img/apple-touch-icon-144x144-precomposed.png">
+
+    <!-- BASE CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+	<link href="css/vendors.css" rel="stylesheet">
+
+    <!-- YOUR CUSTOM CSS -->
+    <link href="css/custom.css" rel="stylesheet">
+		<!-- vue -->
+
+<script src="js/vue.js"></script>
+<!-- axios -->
+<script src="js/vue-axios.js"></script>
+<!-- qs -->
+<script src="js/qs.js"></script>
+				
+</head>
+
+<body id="register_bg">
+	
+	<nav id="menu" class="fake_menu"></nav>
+	
+	<div id="preloader">
+		<div data-loader="circle-side"></div>
+	</div>
+	<!-- End Preload -->
+	
+	<div id="register">
+		<aside>
+			<figure>
+				<a href="index.html"><img src="img/logo/snail-3.png" width="155" height="36" data-retina="true" alt="" class="logo_sticky"></a>
+			</figure>
+			<form autocomplete="off">
+				<div class="msg" style="color:red;text-align: center;">{{msg}}</div>
+				<div class="form-group">
+					
+					<label>用户名</label>
+					<input class="form-control" type="text"  v-model="phone"  >
+					<i class="ti-user"></i>
+				</div>
+				
+				<div class="form-group">
+					<label>新密码</label>
+					<input class="form-control" type="password" id="password1" v-model="pass">
+					<i class="icon_lock_alt"></i>
+				</div>
+				<div class="form-group">
+					<label>确认密码</label>
+					<input class="form-control" type="password" id="password2" v-model="pass2">
+					<i class="icon_lock_alt"></i>
+				</div>
+					<!-- smsButten -->
+					<div class="register-pannel" id="register-pannel" >
+								
+									<div class="input-group" style="width: 150px;float: left;">
+										<input type="text" v-model="code" class="form-control" placeholder="验证码" style="float: right; height: 40px; width: 50px;" />
+										
+										
+										<span class="glyphicon glyphicon-font form-control-feedback" />
+									</div>
+									<div style="float: left; width: 80px;">
+								<span class="register-msg-btn" v-show="show"
+									v-on:click="getCode"><input type="发送验证码" value="获取" class="btn_1" id="submit-review" style="width:100px;height:40px;margin-left:20px"></span> <span
+									class="register-msg-btn" v-show="!show"><input type="发送验证码" :value=count+"s" class="btn_1" id="submit-review" style="width:100px;height:40px;margin-left:20px"></span>
+							</div>
+									
+									
+				</div>
+				<br />
+				<div class="container" style="margin-top: 40px;">
+					
+					<div id="captcha" style="position: relative"></div>
+					
+				</div>
+				<div id="pass-info" class="clearfix"></div>
+				<!-- <a href="#0" class="btn_1 rounded full-width add_top_30">Register Now!</a> -->
+				
+				<div class="text-center add_top_10">放弃修改? <strong><a href="index.html?type=register">登录</a></strong></div>
+			</form>
+			<div class="copy">© 2018 Snail</div>
+		</aside>
+	</div>
+	<!-- /login -->
+	<!-- 图片验证 -->
+	<script type="text/javascript" src="js/jigsaw.js"></script>
+	<!-- COMMON SCRIPTS -->
+    <script src="js/jquery-2.2.4.min.js"></script>
+    <script src="js/common_scripts.js"></script>
+    <script src="js/main.js"></script>
+	<script src="assets/validate.js"></script>
+	<script src="js/change-pass.js"></script>
+	<!-- SPECIFIC SCRIPTS -->
+	<script src="js/pw_strenght.js"></script>
+	
+	
+	
+  
+</body>
+</html>

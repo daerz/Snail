@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>个人信息</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" type="text/css" href="common/layui/css/layui.css"
+	media="all">
+<link rel="stylesheet" type="text/css"
+	href="common/bootstrap/css/bootstrap.css" media="all">
+<link rel="stylesheet" type="text/css" href="common/global.css"
+	media="all">
+<link rel="stylesheet" type="text/css" href="css/personal.css"
+	media="all">
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script  src="js/vue.js"></script>
+<script src="js/vue-axios.js"></script>
+<script src="js/qs.js"></script>
+
+</head>
+<body>
+	<section class="layui-larry-box">
+		<div class="larry-personal" id="findLive">
+			<div class="layui-tab">
+				<blockquote class="layui-elem-quote news_search">
+
+					<div class="layui-inline">
+						<div class="layui-input-inline">
+							<input placeholder="请输入身份证" v-model="uid"
+								class="layui-input search_input" type="text">
+						</div>
+						<div class="layui-input-inline">
+							<input placeholder="请输入姓名" v-model="uname"
+								class="layui-input search_input" type="text">
+						</div>
+						<div class="layui-input-inline">
+							<input placeholder="请输房间号" v-model="r_num"
+								class="layui-input search_input" type="text">
+						</div>
+						<div class="layui-input-inline">
+							<input placeholder="请输订单号" v-model="o_id"
+								class="layui-input search_input" type="text">
+						</div>
+						<div class="layui-input-inline">
+							<select class="layui-input search_input" v-model="usex"
+								type="text">
+								<option value="">请选择性别</option>
+								<option value="男">男</option>
+								<option value="女">女</option>
+							</select>
+						</div>
+						<div class="layui-input-inline">
+							<select class="layui-input search_input" 
+								type="text" v-model="flag">
+								<option value=0>入住情况</option>
+								<option value=1>现在正在入住</option>
+								<option value=2>已退房</option>
+							</select>
+						</div>
+						</br>
+						</br> 
+						开始时间
+						<div class="layui-input-inline">
+							<input class="layui-input search_input" v-model="begin"
+								type="date">
+						</div>
+						结束时间
+						<div class="layui-input-inline">
+							<input class="layui-input search_input" v-model="out" type="date">
+						</div>
+						预计退房时间
+						<div class="layui-input-inline">
+							<input class="layui-input search_input" v-model="cast" type="date">
+						</div>
+						<a class="layui-btn search_btn" @click.prevent="selectLive">查询</a>
+						<a class="layui-btn search_btn" @click.prevent="reset">重置</a>
+				</blockquote>
+				<!-- 操作日志 -->
+				<div class="layui-form news_list">
+					<table class="layui-table">
+						<colgroup>
+							<col width="100px">
+							<col width="9%">
+							<col width="9%">
+							<col width="9%">
+							<col width="9%">
+							<col width="9%">
+							<col width="15%">
+							<col width="15%">
+							<col width="5%">
+							<col width="5%">
+							<col width="5%">
+						</colgroup>
+						<thead>
+							<tr>
+								<th style="text-align: left;">姓名</th>
+								<th>性别</th>
+								<th>身份证</th>
+								<th>订单号</th>
+								<th>房间号</th>
+								<th>预计退房时间</th>
+								<th>入住时间</th>
+								<th>退房时间</th>
+								<th>退房</th>
+								<th>换房</th>
+								<th>编辑</th>
+							</tr>
+						</thead>
+						<tbody class="news_content">
+							<tr v-for="value in showLive">
+								<td align="left">{{value.l_uname}}</td>
+								<td>{{value.l_usex}}</td>
+								<td>{{value.l_uid}}</td>
+								<td>{{value.l_o_id}}</td>
+								<td>{{value.l_r_num}}</td>
+								<td>{{value.l_o_outtime}}</td>
+								<td>{{value.l_intime}}</td>
+								<td>{{value.l_outtime}}</td>
+								<td><a class="layui-btn layui-btn-danger layui-btn-mini "
+									@click.prevent="del(value.l_r_num,value.l_outtime)"><i class="layui-icon"></i>
+										退房</a></td>
+								<td><a class="layui-btn layui-btn-mini "
+									@click.prevent="changeRoom(value.l_r_num,value.l_outtime)"><i
+										class="iconfont icon-edit"></i>换房</a></td>
+								<td><a class="layui-btn layui-btn-mini "
+									@click.prevent="changeEdit(value.l_id,value.l_outtime)"><i
+										class="iconfont icon-edit"></i>编辑</a></td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="larry-table-page clearfix">
+                         
+				          <div id="page" class="page"></div>
+			         </div>
+				</div>
+			</div>
+		</div>
+
+	</section>
+	<script type="text/javascript" src="common/layui/layui.js"></script>
+	<script type="text/javascript" src="js/newslist.js"></script>
+	<script type="text/javascript">
+ 	var vm = new Vue({
+        el: '#findLive',      //div的id
+        data: {
+        	showLive:"",//数据，名称自定
+        	qiantai:[],
+        	currentPage:1,
+        	totalPage:1,
+        	uid:"",
+        	uname:"",
+        	usex:"",
+        	r_num:"",
+        	num:0,
+        	o_id:"",
+        	begin:"",
+        	out:"",
+        	cast:"",
+        	flag:0,
+        	type:1
+        },
+        created: function () { //created方法，页面初始调用
+        	axios.get('/Snail/order/selectAllLive',
+					{params:{spage:1}}
+				).then(function(response){
+					vm.showLive = response.data.list;
+					var totalPage=response.data.totalPage;
+					vm.totalPage=totalPage;
+					
+	       		 })
+	       		 .then(()=>{
+	       			layui.use(['jquery','layer','element','laypage'],function(){
+	      	  	      window.jQuery = window.$ = layui.jquery;
+	      	  	      window.layer = layui.layer;
+	      	  	         var element = layui.element(),
+	      	  	             laypage = layui.laypage;
+	      	  	         vm.changePage(1);
+	      	  	    });
+	       		 })
+        },
+        mounted:function(){
+        	
+        	
+	        
+	        
+        },
+        
+        
+        methods:{
+        	del:function(di,time){
+        		if(time == null){
+	        		layer.open({
+	        			content:"确定退房?",
+	        			btn:["确定","取消"],
+	        			yes:function(index, layero){
+	        				layer.closeAll();
+	        				axios.delete('/Snail/order/deleteLive',{
+	                			params:{l_r_num:di}
+	                		})
+	                		.then(function(response){
+	                			if(response.data.result=="退房成功"){
+	                				layer.open({
+	                					title: '消息'
+	                					,content: '退房成功,退还金额：'+response.data.price
+	                				})
+	    							if(vm.type ==1){
+	    								vm.findAllLive(vm.currentPage);
+	    							}else{
+	    								vm.changeLive(vm.currentPage);
+	    							}
+	                				
+	                			}else{
+	                				layer.open({
+	                					title: '消息'
+	                					,content: '退房失败'
+	                				})
+	                			}
+	                		})
+	        			}
+	        		})
+        		}else{
+        			layer.open({
+    					title: '消息'
+    					,content: '该房间已退房'
+    				})
+        		}
+        	},
+        	
+        	selectLive:function(){
+        		this.currentPage =1;
+        		if(this.r_num != ""){
+        			this.num = this.r_num; 
+        		}else{
+        			this.num =0;
+        		}
+        		this.showLive = [];
+        		if(this.uid =="" && this.uname =="" && this.usex =="" &&
+        			this.num ==0 && this.o_id =="" && this.flag ==0 &&
+        			this.begin =="" && this.out =="" && this.cast ==""){
+        			this.type=1;
+        		}else{
+        			this.type=2;
+        		}
+        		if(this.type ==1){
+        			this.findAllLive(this.currentPage);
+        		}else{
+        			this.findLive(this.currentPage);
+        		}
+        	},
+        	changePage:function(pp){
+            	  layui.laypage({
+      				cont: 'page',
+      				pages: vm.totalPage //总页数
+      					,
+      				groups: 5 //连续显示分页数
+      					,
+      				jump: function(obj, first) {
+      					//得到了当前页，用于向服务端请求对应数据
+      					var curr = obj.curr;
+      					if(!first) {
+      						console.log(curr);
+      						vm.currentPage=curr;
+      						vm.showLive = [];
+      						if(vm.type==1){
+      							vm.findAllLive(curr);
+      						}else{
+      							vm.changeLive(curr);
+      						}
+      					}
+      				},
+      				curr:pp
+      			})
+      		},
+        
+			findAllLive:function(page){
+				axios.get('/Snail/order/selectAllLive',
+					{params:{spage:page}}
+				).then(function(response){
+					vm.showLive = response.data.list;
+					var totalPage=response.data.totalPage;
+					vm.totalPage=totalPage;
+					vm.changePage(page);
+	       		 })
+	  		},
+    		
+			findLive:function(page){
+				axios.get('/Snail/order/selectLive',
+					{params:{l_uid:vm.uid,
+					l_uname:vm.uname,
+					l_usex:vm.usex,
+					l_r_num:vm.num,
+					l_o_id:vm.o_id,
+					l_flag:vm.flag,
+					l_o_outtime:vm.cast,
+					beginTime:vm.begin,
+					outTime:vm.out}}
+				).then(function(response){
+					if(response.data.list == undefined){
+						layer.open({
+        					title: '消息'
+        					,content: response.data.result
+        				})
+					}else{
+						vm.qiantai = response.data.list;
+						vm.changeLive(page);
+					}
+	       		 })
+	  		},
+	  		changeLive:function(page){
+	  			var j = (page-1)*7;
+				for(let i=j;i<7*page;i++){
+					if(this.qiantai[i] == undefined){
+						break;
+					}
+					this.showLive.push(this.qiantai[i]);
+				}
+				this.currentPage = page;
+				var total = (this.qiantai.length)%7;
+				if(total == 0){
+					this.totalPage = (this.qiantai.length)/7;
+					
+				}else{
+					this.totalPage = parseInt(this.qiantai.length/7)+1;
+				}
+				this.changePage(page);
+	  		},
+	  		changeRoom:function(room,time){
+	  			if(time == null){
+		  			axios.get('/Snail/order/selectRoom',
+							{params:{room:room}}
+						).then(function(response){
+							layer.open({
+	        					title: '换房',
+	        					closeBth:true,
+	        					type:1,
+	        					area:'600px;',
+	        					content: `
+	        					<div class="add_box">
+	        						<div id="rnum" class='someother' value=room>
+	        							原房间：${room}
+	        						</div>
+	        						<div>
+	        							<input id="id" placeholder="请输入身份证"  type="text">
+	        						</div>
+	        						<select id="rid"  type="text">
+	        						</select>
+	        					</div>
+	        					`,
+	        					btn:['更换','退出'],
+	        					yes:(index,layero)=>{
+	        						layer.closeAll();
+	        						axios.put('/Snail/order/updateLive',Qs.stringify({
+	            						l_r_num:room,
+	            						l_uid:$("#id").val(),
+	            						r_id:$("#rid").val()
+	            					})).then((res)=>{
+	            						layer.open({
+	                    					title: '消息',
+	                    					content: res.data.result
+	                    				})
+	                    				if(vm.type ==1){
+	        								vm.findAllLive(vm.currentPage);
+	        							}else{
+	        								vm.changeLive(vm.currentPage);
+	        							}
+	            					})
+	        					}
+	        				})
+							return response;
+			       		})
+			       	.then((response)=>{
+			       		if(response.data.list != undefined){
+			       			response.data.list.forEach(item=>{
+	    						$("#rid").append(`<option value="`+item.r_id+`">`+item.r_num+`</option>`)
+	    					})
+			       		}else{
+			       			layer.open({
+	        					title: '消息',
+	        					content: response.data.result
+	        				})
+			       		}
+			       	})
+	  			}else{
+	  				layer.open({
+    					title: '消息'
+    					,content: '该房已退房'
+    				})
+	  			}
+	  		},
+	  		reset:function(page){
+	  			this.uid="";
+	        	this.uname="";
+	        	this.usex = "";
+	        	this.r_num = "";
+	        	this.num = 0;
+	        	this.o_id = "";
+	        	this.begin = "";
+	        	this.cast="";
+	        	this.out="";
+	        	this.flag=0,
+	        	this.selectLive();
+	  		},
+	        changeEdit:function(lid,time){
+	        	if(time == null){
+		        	layer.open({
+						title: '编辑',
+						closeBth:true,
+						type:1,
+						area:'600px;',
+						content: `
+						<div class="add_box">
+							<div>
+								<input id="id" placeholder="请输入身份证"  type="text">
+							</div>
+							<div>
+								<input id="name" placeholder="请输入姓名"  type="text">
+							</div>
+							<select id="sex"  type="text">
+								<option value="">请选择性别</option>
+								<option value="男">男</option>
+								<option value="女">女</option>
+							</select>
+						</div>
+						`,
+						btn:['编辑','退出'],
+						yes:(index,layero)=>{
+							layer.closeAll();
+							axios.put('/Snail/order/changeEdit',Qs.stringify({
+								l_id:lid,
+								l_uid:$("#id").val(),
+								l_uname:$("#name").val(),
+								l_usex:$("#sex").val()
+							})).then((res)=>{
+								layer.open({
+		        					title: '消息',
+		        					content: res.data.result
+		        				})
+		        				if(vm.type ==1){
+									vm.findAllLive(vm.currentPage);
+								}else{
+									vm.changeLive(vm.currentPage);
+								}
+							})
+						}
+					})
+	        	}else{
+	        		layer.open({
+    					title: '消息'
+    					,content: '该房已退房'
+    				})
+	        	}
+	        }
+      	} 
+    });
+
+</script>
+</body>
+</html>

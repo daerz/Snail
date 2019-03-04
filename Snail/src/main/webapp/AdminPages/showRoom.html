@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>房间信息</title>
+	<meta name="renderer" content="webkit">	
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">	
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">	
+	<meta name="apple-mobile-web-app-capable" content="yes">	
+	<meta name="format-detection" content="telephone=no">	
+	<link rel="stylesheet" type="text/css" href="common/layui/css/layui.css" media="all">
+	<link rel="stylesheet" type="text/css" href="common/bootstrap/css/bootstrap.css" media="all">
+	<link rel="stylesheet" type="text/css" href="common/global.css" media="all">
+	<link rel="stylesheet" type="text/css" href="css/showRoom.css" media="all">
+</head>
+<body>
+<section class="layui-larry-box" id="roomSection" style="padding-top: 0px;">
+	
+	<div class="larry-personal">
+	    <div class="layui-tab">
+            
+	<form class="layui-form" action="">
+	<blockquote class="layui-elem-quote news_search">
+	
+		<div class="layui-inline" style="margin-top: 10px;">
+			<div class="layui-form-mid layui-word-aux">※此处用于通过条件筛选房间信息※</div>
+		</div><br/>
+		
+		<div class="layui-inline" style="margin-top: 10px;">
+		    <div class="layui-input-inline">
+		    	<input value="" placeholder="请输入房间号" class="layui-input search_input" type="text" id="rnum">
+		    </div>
+		</div>
+		
+		<div class="layui-inline" style="margin-top: 10px;">
+	      <div class="layui-input-inline">
+	        <select   lay-search="" id="rtype" >
+<!-- 	          <option value="0">请选择房型</option> -->
+	          <option v-for="(i,j) in roomType" :value="j">{{ i }}</option>
+	        </select>
+	      </div>
+	    </div>
+	    
+	    <div class="layui-inline" style="margin-top: 10px;">
+	      <div class="layui-input-inline">
+	        <select   lay-search="" id="rsmoken">
+	          <option value="0">请选择烟房状态</option>
+	          <option value="1">无烟房</option>
+	          <option value="2">有烟房</option>
+	        </select>
+	      </div>
+	    </div>
+	    
+	    <div class="layui-inline" style="margin-top: 10px;">
+	      <div class="layui-input-inline">
+	        <select   lay-search="" id="rbreakfast">
+	          <option value="0">请选择早餐状态</option>
+	          <option value="1">无早</option>
+	          <option value="2">有早</option>
+	        </select>
+	      </div>
+	    </div>
+	    
+	    <div class="layui-inline" style="margin-top: 10px;">
+	      <div class="layui-input-inline">
+	        <select  lay-verify="required" lay-search="" id="rwindow">
+	          <option value="0">请选择窗户类型</option>
+	          <option value="1">普通窗</option>
+	          <option value="2">落地窗</option>
+	        </select>
+	      </div>
+	    </div>
+	    
+	    <div class="layui-inline" style="margin-top: 10px;">
+			  开始时间
+		    <div class="layui-input-inline">
+		    	<input  style="padding: 8px;"  class="layui-input search_input" type="date" id="beginDay">
+		    </div>
+		</div>
+		
+		<div class="layui-inline" style="margin-top: 10px;">
+			结束时间
+		    <div class="layui-input-inline"> 	
+		    	<input  style="padding: 8px;"  class="layui-input search_input" type="date" id="endDay">
+		    </div>
+		</div>
+		
+		<div class="layui-inline" style="margin-top: 10px;">
+	 		<button class="layui-btn layui-btn-danger layui-btn-radius" type="button" @click="searchRoom">查询</button>
+	 		<button class="layui-btn layui-btn-radius" type="button" @click="getPage(1)">所有</button>
+	 		<button class="layui-btn layui-btn-warm layui-btn-radius" type="reset">重置</button>
+ 		</div>
+ 		<div class="layui-inline">
+ 		
+ 		<div class="myself-circle-group">
+ 		<div class="myself-circle-tip">烟房状态</div>
+ 		<div class="myself-circle-no myself-circle-tip"></div><div class="myself-circle-tip">无烟房</div>
+ 		<div class="myself-circle-have myself-circle-tip"></div><div class="myself-circle-tip">有烟房</div>
+ 		</div>
+ 		<div class="myself-circle-group">
+ 		<div class="myself-circle-tip">早餐状态</div>
+ 		<div class="myself-circle-no myself-circle-tip"></div><div class="myself-circle-tip">无早</div>
+ 		<div class="myself-circle-have myself-circle-tip"></div><div class="myself-circle-tip">有早</div>
+ 		</div>
+ 		<div class="myself-circle-group">
+ 		<div class="myself-circle-tip">窗房状态</div>
+ 		<div class="myself-circle-no myself-circle-tip"></div><div class="myself-circle-tip">普通窗</div>
+ 		<div class="myself-circle-have myself-circle-tip"></div><div class="myself-circle-tip">落地窗</div>
+ 		</div>
+ 		<div class="myself-circle-group">
+ 		<div class="myself-circle-tip">维护状态</div>
+ 		<div class="myself-circle-no myself-circle-tip"></div><div class="myself-circle-tip">无维护</div>
+ 		<div class="myself-circle-waring myself-circle-tip"></div><div class="myself-circle-tip">有维护</div>
+ 		</div>
+		</div>
+ 		
+ 		<div class="layui-inline" style="margin-top: 10px;">
+	 		<button class="layui-btn layui-btn-danger layui-btn-radius" type="button" @click="addRoom" >添加房间</button>
+ 		</div>
+ 		
+		</blockquote>
+	</form>	
+
+	
+            
+		         <!-- 房间展示 -->
+                <div class="layui-form news_list" id="layerDemo">
+                    <table class="layui-table">
+					    <colgroup>
+						<col width="6%">
+						<col width="9%">
+						<col width="8%">
+						<col width="8%">
+						<col width="8%">
+						<col width="8%">
+						<col width="8%">
+						<col width="8%">
+						<col>
+						<col width="6%">
+						<col width="6%">
+						<col width="6%">
+						</colgroup>
+					<thead>
+						<tr>
+							<th>房间号</th>
+							<th>房型</th>
+							<th>价格<br/>(单位:元)</th>
+							<th>折扣<br/>(范围0~1)</th>
+							<th>烟房</th>
+							<th>早餐</th>
+							<th>窗户</th>
+							<th>维护</th>
+							<th>描述</th>
+							<th>预约</th>
+							<th>编辑</th>
+							<th>删除</th>
+						</tr>
+					</thead>
+					<tbody class="news_content"  v-for="(item,i) in room" v-cloak>
+						<tr v-if="i<pagenum">
+							<td>{{item.r_num}}</td>
+							<td>{{roomType[item.r_rt_id]}}</td>
+							<td>{{item.r_price}}</td>
+							<td>{{item.r_discount}}</td>
+							<td v-if="item.r_smoken==2"><div class="myself-circle-have"></div></td>
+							<td v-else><div class="myself-circle-no"></div></td>
+							<td v-if="item.r_breakfast==2"><div class="myself-circle-have"></div></td>
+							<td v-else><div class="myself-circle-no"></div></td>
+							<td v-if="item.r_window==2"><div class="myself-circle-have"></div></td>
+							<td v-else><div class="myself-circle-no"></div></td>
+							<td v-if="item.r_state==2"><div class="myself-circle-waring"></div></td>
+							<td v-else><div class="myself-circle-no"></div></td>
+							<td v-if="item.r_note!=null && item.r_note!='' ">{{item.r_note}}</td>
+							<td v-else>无</td>
+							<td>
+								<a  @click="toReservation(i)" class="layui-btn layui-btn-mini" style="background-color: #F7B824;" >预约</a>
+							</td>
+							<td>
+								<a @click="editRoom(i)" class="layui-btn layui-btn-mini "><i class="iconfont icon-edit"></i> 编辑</a>
+							</td>
+							<td>
+								<a @click="deleteRoom(item.r_id)"  class="layui-btn layui-btn-danger layui-btn-mini" data-id="1" ><i class="layui-icon"></i>删除</a>
+							</td>
+						</tr>
+					</tbody>
+					</table>
+                     <div class="larry-table-page clearfix">
+                         
+				          <div id="page" class="page"></div>
+			         </div>
+			    </div>
+			    
+		    </div>
+		</div>
+</section>
+
+<script  src="js/vue.js"></script>
+<script src="js/vue-axios.js"></script>
+<script src="js/jquery.min.js"></script>
+<script src="js/qs.js"></script>
+<script type="text/javascript" src="common/layui/layui.js"></script>
+<script type="text/javascript" src="js/newslist.js"></script>
+<script>
+
+var vm = new Vue({
+	el:'#roomSection',
+	data:{
+		query:0,					//判断是否进行模糊查询
+		pagenum:'10',				//存储每页显示的条数
+		allpage:0,					//存放总的页数
+		nowpage:1,					//存放现在的页数
+		roomType:{1:"无数据请刷新页面"},			//存放所有的房间类型
+		room:[],					//存放每页显示的房间数据
+		roomLib:[],					//存放所有模糊查询的房间信息
+		xrnum:'',
+		xrtype:'',
+		xrsmoken:'',
+		xrbreakfast:'',
+		xrwindow:'',
+		xbeginDay:'',
+		xendDay:''
+	},
+	methods:{
+// 		预订房间
+		toReservation:(inde)=>{
+			if(vm.query==1 && vm.xbeginDay!='' && vm.xendDay!=''){
+				if(vm.room[inde].r_state==2){
+					layer.open({
+						title:'消息',
+						closeBtn: false,
+						resize:false,
+						move: false,
+						content:'有设施维修是否预约！！！',
+						btn:['继续','退出'],
+						yes:(index,layero)=>{
+							layer.closeAll();
+							vm.Reservation(inde);
+						}
+					})
+				}else{
+					vm.Reservation(inde);
+				}
+			}else{
+				layer.open({
+					title:'消息',
+					closeBtn: false,
+					resize:false,
+					move: false,
+					content:'请先按时间进行查询！！！',
+					btn:['退出']
+				})
+			}
+		},
+// 		下单预约信息
+		Reservation:(index)=>{
+			console.log(index);
+			let rid = vm.room[index].r_id;
+			let rn = vm.room[index].r_num;
+			let xbd = vm.xbeginDay;
+			let xed = vm.xendDay;
+			let	rp = vm.room[index].r_price;
+			let rd = vm.room[index].r_discount;
+			let content =`
+				<div style="width:90%; margin:24px auto 0 auto">
+					<div style="font-weight: bold;color:#FF5722;font-size:30px;text-align: center;" >价格：￥${parseInt(rp*rd)}</div>
+					<div>房间号：${rn}</div>
+					<div>入住时间：  ${xbd}----至---->${xed} </div>
+					<input id="pho" type="text"  style="font-size:16px;" placeholder="请输入手机号" class="layui-input">
+				</div>
+			`
+			layer.open({
+				title:'预约房间',
+				closeBtn: false,
+				resize:false,
+				move: false,
+				type:1,
+				area:'400px;',
+				content:content,
+				btn:['添加','退出'],
+				yes:(index,layero)=>{
+					let phone = $("#pho").val();
+					let info = {};
+					info['o_phone']=phone.trim();
+					info['i_r_id']=rid;
+					info['i_r_num']=rn;
+					info['r_price']=parseInt(rp*rd);
+					info['o_intime']=xbd;
+					info['o_outtime']=xed;
+					
+// 					axios提交创建订单
+					
+					axios.post('/Snail/order/createOrderNotLine',Qs.stringify({...info}))
+					.then((res)=>{
+						layer.closeAll();
+						if(res.data.message=="成功"){
+							layer.open({
+								title:"消息",
+								closeBtn: false,
+								resize:false,
+								move: false,
+								content:"下单成功"
+							})
+						}else{
+							layer.open({
+								title:"消息",
+								closeBtn: false,
+								resize:false,
+								move: false,
+								content:"下单失败"
+							})
+						}
+					})
+					
+					
+					
+				}
+			})
+		},
+// 		添加房间
+		addRoom:()=>{
+			let content = '<div style="width:90%; margin:24px auto 0 auto">';
+// 			房间号
+			content += '<div class="layui-form-item"><label class="layui-form-label" style="font-size:16px;">房号:</label><div class="layui-input-block"><input id="arnum" type="text" name="title" required  lay-verify="required" style="font-size:16px;" placeholder="请输入房间号" autocomplete="off" class="layui-input"></div></div>'
+//	 		价格
+			content += '<div class="layui-form-item"><label class="layui-form-label" style="font-size:16px;">价格:</label><div class="layui-input-block"><input id="arprice" type="text" name="title" required  lay-verify="required" style="font-size:16px;" placeholder="默认9999" autocomplete="off" class="layui-input"></div></div>'
+// 			房型
+			content += '<div class="layui-form-item"><label class="layui-form-label" style="font-size:16px;">房型:</label><div class="layui-input-block"><select id="artype"  lay-verify="required" style="width:100%; font-size:16px; height:38px; padding-left:10px; line-height:38px; border:1px solid #e6e6e6; border-radius:2px;">';
+			for(var key in vm.roomType){
+				content+='<option value="'+key+'">'+vm.roomType[key]+'</option>';
+			}
+			content += '</select></div></div>';
+// 			烟房状态
+			content += '<div class="layui-form-item"><label class="layui-form-label" style="font-size:16px;">烟房:</label><div class="layui-input-block"><select id="arsmoken" lay-verify="required" style="width:100%; font-size:16px; height:38px; padding-left:10px; line-height:38px; border:1px solid #e6e6e6; border-radius:2px;">';
+			content+='<option selected = "selected" value="1">无烟房</option>';
+			content+='<option value="2">有烟房</option>';
+			content += '</select></div></div>';
+// 			早餐状态
+			content += '<div class="layui-form-item"><label class="layui-form-label" style="font-size:16px;">早餐:</label><div class="layui-input-block"><select id="arbreakfast" lay-verify="required" style="width:100%; font-size:16px; height:38px; padding-left:10px; line-height:38px; border:1px solid #e6e6e6; border-radius:2px;">';
+			content+='<option selected = "selected" value="1">无早</option>';
+			content+='<option value="2">有早</option>';
+			content += '</select></div></div>';
+// 			窗户状态
+			content += '<div class="layui-form-item"><label class="layui-form-label" style="font-size:16px;">窗户:</label><div class="layui-input-block"><select id="arwindow" lay-verify="required" style="width:100%; font-size:16px; height:38px; padding-left:10px; line-height:38px; border:1px solid #e6e6e6; border-radius:2px;">';
+			content+='<option selected = "selected" value="1">普通窗</option>';
+			content+='<option value="2">落地窗</option>';
+			content += '</select></div></div>';
+// 			房间描述
+			content += '<div class="layui-form-item layui-form-text"><label class="layui-form-label" style="font-size:16px;">描述:</label><div class="layui-input-block"><textarea id="arnote"   style="width:100%; font-size:16px; height:60px; padding-left:10px; line-height:38px; border:1px solid #e6e6e6; border-radius:2px;" placeholder="请输入房间描述"></textarea></div></div>'
+			content += '</div><hr>';
+			
+// 			弹出模态框
+			layer.open({
+				title:'添加房间',
+				closeBtn: false,
+				resize:false,
+				move: false,
+				type:1,
+				area:'600px;',
+				content:content,
+				btn:['添加','退出'],
+				yes:(index,layero)=>{
+					console.log("房间号："+$("#arnum").val());
+					console.log("价格："+$("#arprice").val());
+					console.log("房型："+$("#artype").val());
+					console.log("烟房："+$("#arsmoken").val());
+					console.log("早餐："+$("#arbreakfast").val());
+					console.log("窗户："+$("#arwindow").val());
+					console.log("描述："+$("#arnote").val());
+					
+
+					layer.closeAll();
+					axios.post('/Snail/room/add',Qs.stringify({
+						r_num:$("#arnum").val()!=''?$("#arnum").val():'0',
+						r_price:$("#arprice").val()!=''?$("#arprice").val():'0',
+						r_rt_id:$("#artype").val(),
+						r_smoken:$("#arsmoken").val(),
+						r_breakfast:$("#arbreakfast").val(),
+						r_window:$("#arwindow").val(),
+						r_note:$("#arnote").val()
+					})).then((res)=>{
+						console.log(res.data);
+						if(res.data.result=="添加成功"){
+							layer.open({
+								title:"消息",
+								closeBtn: false,
+								resize:false,
+								move: false,
+								content:"添加成功"
+							})
+// 							vm.searchRoom();
+							if(vm.query==1){
+								vm.searchData(vm.nowpage);
+							}else{
+								vm.getPage(vm.nowpage);
+							}
+						}else{
+							layer.open({
+								title:"消息",
+								closeBtn: false,
+								resize:false,
+								move: false,
+								content:"添加失败"
+							})
+						}
+					})
+				}
+			})
+			
+		},
+// 		编辑房间
+		editRoom:(index)=>{
+			let rid = vm.room[index].r_id;
+			let content = '<div style="width:90%; margin:24px auto 0 auto">';
+// 			修改房间号
+			content += '<div class="layui-form-item"><label class="layui-form-label" style="font-size:16px;">房号:</label><div class="layui-input-block"><input id="crnum" type="text" name="title" required  lay-verify="required" style="font-size:16px;" placeholder='+vm.room[index].r_num+' autocomplete="off" class="layui-input"></div></div>'
+// 			修改价格
+			content += '<div class="layui-form-item"><label class="layui-form-label" style="font-size:16px;">价格:</label><div class="layui-input-block"><input id="crprice" type="text" name="title" required  lay-verify="required" style="font-size:16px;" placeholder='+vm.room[index].r_price+' autocomplete="off" class="layui-input"></div></div>'
+// 			修改折扣
+			content += '<div class="layui-form-item"><label class="layui-form-label" style="font-size:16px;">折扣:</label><div class="layui-input-block"><input id="crdiscount" type="text" name="title" required  lay-verify="required" style="font-size:16px;" placeholder='+vm.room[index].r_discount+' autocomplete="off" class="layui-input"></div></div>'
+// 			选择房型
+			content += '<div class="layui-form-item"><label class="layui-form-label" style="font-size:16px;">房型:</label><div class="layui-input-block"><select id="crtype"  lay-verify="required" style="width:100%; font-size:16px; height:38px; padding-left:10px; line-height:38px; border:1px solid #e6e6e6; border-radius:2px;">';
+			for(var key in vm.roomType){
+				if(key==vm.room[index].r_rt_id){
+					content+='<option selected = "selected" value="'+key+'">'+vm.roomType[key]+'</option>';
+				}else{
+					content+='<option value="'+key+'">'+vm.roomType[key]+'</option>';
+				}
+			}
+			content += '</select></div></div>';
+// 			烟房状态
+			content += '<div class="layui-form-item"><label class="layui-form-label" style="font-size:16px;">烟房:</label><div class="layui-input-block"><select id="crsmoken" lay-verify="required" style="width:100%; font-size:16px; height:38px; padding-left:10px; line-height:38px; border:1px solid #e6e6e6; border-radius:2px;">';
+			if(vm.room[index].r_smoken==2){
+				content+='<option value="1">无烟房</option>';
+				content+='<option selected = "selected" value="2">有烟房</option>';
+			}else{
+				content+='<option selected = "selected" value="1">无烟房</option>';
+				content+='<option value="2">有烟房</option>';
+			}
+			content += '</select></div></div>';
+// 			早餐状态
+			content += '<div class="layui-form-item"><label class="layui-form-label" style="font-size:16px;">早餐:</label><div class="layui-input-block"><select id="crbreakfast" lay-verify="required" style="width:100%; font-size:16px; height:38px; padding-left:10px; line-height:38px; border:1px solid #e6e6e6; border-radius:2px;">';
+			if(vm.room[index].r_breakfast==2){
+				content+='<option value="1">无早</option>';
+				content+='<option selected = "selected" value="2">有早</option>';
+			}else{
+				content+='<option selected = "selected" value="1">无早</option>';
+				content+='<option value="2">有早</option>';
+			}
+			content += '</select></div></div>';
+// 			窗户状态
+			content += '<div class="layui-form-item"><label class="layui-form-label" style="font-size:16px;">窗户:</label><div class="layui-input-block"><select id="crwindow" lay-verify="required" style="width:100%; font-size:16px; height:38px; padding-left:10px; line-height:38px; border:1px solid #e6e6e6; border-radius:2px;">';
+			if(vm.room[index].r_window==2){
+				content+='<option value="1">普通窗</option>';
+				content+='<option selected = "selected" value="2">落地窗</option>';
+			}else{
+				content+='<option selected = "selected" value="1">普通窗</option>';
+				content+='<option value="2">落地窗</option>';
+			}
+			content += '</select></div></div>';
+// 			房间描述
+			if(vm.room[index].r_note==null){
+				content += '<div class="layui-form-item layui-form-text"><label class="layui-form-label" style="font-size:16px;">描述:</label><div class="layui-input-block"><textarea id="crnote"  style="width:100%; font-size:16px; height:60px; padding-left:10px; line-height:38px; border:1px solid #e6e6e6; border-radius:2px;" placeholder="请输入房间描述"></textarea></div></div>'
+			}else{
+				content += '<div class="layui-form-item layui-form-text"><label class="layui-form-label" style="font-size:16px;">描述:</label><div class="layui-input-block"><textarea id="crnote"  style="width:100%; font-size:16px; height:60px; padding-left:10px; line-height:38px; border:1px solid #e6e6e6; border-radius:2px;">'+vm.room[index].r_note+'</textarea></div></div>'
+			}
+			content += '</div><hr>';
+// 			弹出模态框
+			layer.open({
+				title:'修改房间信息',
+				closeBtn: false,
+				resize:false,
+				move: false,
+				type:1,
+				area:'600px',
+				content:content,
+				btn:['修改','退出'],
+				yes:(index,layero)=>{
+					console.log("房间号："+$("#crnum").val());
+					console.log("价格："+$("#crprice").val());
+					console.log("折扣："+$("#crdiscount").val());
+					console.log("房型："+$("#crtype").val());
+					console.log("烟房："+$("#crsmoken").val());
+					console.log("早餐："+$("#crbreakfast").val());
+					console.log("窗户："+$("#crwindow").val());
+					console.log("描述："+$("#crnote").val());
+					
+					layer.closeAll();
+					axios.put('/Snail/room/change',Qs.stringify({
+						r_id:rid,
+						r_num:$("#crnum").val()!=''?$("#crnum").val():'0',
+						r_price:$("#crprice").val()!=''?$("#crprice").val():'0',
+						r_discount:$("#crdiscount").val()!=''?$("#crdiscount").val():'0',
+						r_rt_id:$("#crtype").val(),
+						r_smoken:$("#crsmoken").val(),
+						r_breakfast:$("#crbreakfast").val(),
+						r_window:$("#crwindow").val(),
+						r_note:$("#crnote").val()
+					})).then((res)=>{
+						console.log(res.data);
+						if(res.data.result=="修改成功"){
+							layer.open({
+								title:"消息",
+								closeBtn: false,
+								resize:false,
+								move: false,
+								content:"修改成功"
+							})
+							if(vm.query==1){
+								vm.searchData(vm.nowpage);
+							}else{
+								vm.getPage(vm.nowpage);
+							}
+						}else{
+							layer.open({
+								title:"消息",
+								closeBtn: false,
+								resize:false,
+								move: false,
+								content:"修改失败"
+							})
+						}
+					})
+				}
+			})
+			
+		},
+// 		删除房间
+		deleteRoom:(rid)=>{
+			layer.open({
+				title:false,
+				closeBtn: false,
+				resize:false,
+				move: false,
+				content:"确认删除？",
+				btn:["确认","取消"],
+				yes:function(index,layero){
+					layer.closeAll();
+					axios.delete("/Snail/room/remove",{
+						params:{
+							r_id:rid
+						}
+					})
+					.then(response=>{
+						if(response.data.result=="房间删除成功"){
+							layer.open({
+								title:"消息",
+								closeBtn: false,
+								resize:false,
+								move: false,
+								content:"删除成功"
+							})
+							if(vm.query==1){
+								vm.searchData(vm.nowpage);
+							}else{
+								vm.getPage(vm.nowpage);
+							}
+							
+						}else{
+							layer.open({
+								title:"消息",
+								closeBtn: false,
+								resize:false,
+								move: false,
+								content:"删除失败"
+							})
+						}
+					})
+				}
+			})
+		},
+// 		提交按钮触发事件
+		searchRoom:()=>{
+
+			vm.query=1;
+// 			存储当前模糊查询信息
+			vm.xrnum=$("#rnum").val()!=''?$("#rnum").val():'0';
+			vm.xrtype=$("#rtype").val()!=''?$("#rtype").val():'0';
+			vm.xrsmoken=$("#rsmoken").val()!=''?$("#rsmoken").val():'0';
+			vm.xrbreakfast=$("#rbreakfast").val()!=''?$("#rbreakfast").val():'0';
+			vm.xrwindow=$("#rwindow").val()!=''?$("#rwindow").val():'0';
+			vm.xbeginDay=$("#beginDay").val();
+			vm.xendDay=$("#endDay").val();
+			
+			vm.nowpage=1;
+			vm.searchData(1);
+			
+		},
+// 		获取下一页的数据
+		getPage:(page)=>{
+			console.log(page);
+			vm.query=0;
+			axios.get('/Snail/room/page',{params:{s_page:page,s_count:'10'}}).then(res => {
+	          	vm.room=res.data.room;
+	          	let num = res.data.number;
+	          	let all_page = 0;
+	          	if(num%10>0){
+	          		all_page=parseInt(num/10)+1;
+	          	}else{
+	          		all_page=num/10;
+	          	}
+	          	if(page>all_page && page>1){
+	          		vm.getPage(page-1);
+	          	}else{
+	          		vm.allpage=all_page;
+		          	vm.changePage(page);
+	          	}
+	          }).catch(function (error) {
+	              console.log(error);
+	          })
+		},
+// 		变更页码
+		changePage:(pp)=>{
+      	  layui.laypage({
+				cont: 'page',
+				pages: vm.allpage //总页数
+					,
+				groups: 5 //连续显示分页数
+					,
+				jump: function(obj, first) {
+					//得到了当前页，用于向服务端请求对应数据
+					var curr = obj.curr;
+					if(!first) {
+						//layer.msg('第 '+ obj.curr +' 页');
+						console.log(curr);
+						vm.nowpage=curr;
+						if(vm.query==1){
+							vm.searchPage(curr);
+						}else{
+							vm.getPage(curr);
+						}
+					}
+				},
+				curr:pp
+			})
+		},
+// 		获得所有筛选的结果
+		searchData:(page)=>{
+			let pn = (page-1)*10;
+// 			封装条件信息
+			let info={
+					r_num:vm.xrnum,
+					r_rt_id:vm.xrtype,
+					r_smoken:vm.xrsmoken,
+					r_breakfast:vm.xrbreakfast,
+					r_window:vm.xrwindow,
+					beginDay:vm.xbeginDay,
+					endDay:vm.xendDay
+			}
+			if(vm.xrnum=='0' && vm.xrtype=='0' && vm.xrsmoken=='0' && vm.xrbreakfast=='0' && vm.xrwindow=='0' && vm.xbeginDay=='' && vm.endDay==''){
+				vm.getPage(1);
+			}else{
+// 			获得筛选的房间信息并存储到变量中
+			axios.get('/Snail/room/term',{params:{...info}}).then(res => {
+				vm.roomLib=res.data.room;
+				vm.room=[];
+				
+// 				判断是否存在该页数据
+				if(vm.roomLib.length<pn+1){
+					if(page>1){
+						page=page-1;
+					}else{
+						page=1;
+					}
+					pn = (page-1)*10;
+				}
+				for(let i=pn;i<vm.roomLib.length && i<pn+10;i++){
+					vm.room.push(vm.roomLib[i]);
+				}
+				let num = vm.roomLib.length;
+				let all_page = 0;
+	          	if(num%10>0){
+	          		all_page=parseInt(num/10)+1;
+	          	}else{
+	          		all_page=num/10;
+	          	}
+	          	vm.allpage=all_page;
+	          	vm.nowpage=page;
+	          	vm.changePage(page);
+	          })
+	          .catch(function (error) {
+	              console.log(error);
+	       		})
+			}
+			
+		},
+// 		获取赛选分页信息
+		searchPage:(page)=>{
+			let pn = (page-1)*10;
+			vm.room=[];
+			for(let i=pn;i<vm.roomLib.length && i<pn+10;i++){
+				vm.room.push(vm.roomLib[i]);
+			}
+		}
+	},
+	mounted:function(){
+
+// 		获取房型信息并存入变量中 
+		 axios.get('/Snail/roomType/source/all').then(res => {
+			 vm.roomType['0']="请选择房型";
+        	for(let i=0;i<res.data.length;i++){
+        		if(res.data[i].rt_flage==0){
+        			vm.roomType[res.data[i].rt_id]=res.data[i].rt_name;
+        		}
+        	}
+        }).catch(function (error) {
+            console.log(error);
+        })
+		
+//		 获取所有房间信息系并存入变量中
+		 axios.get('/Snail/room/page',{params:{s_page:'1',s_count:'10'}}).then(res => {
+	     	vm.room=res.data.room;
+	     	let num = res.data.number;
+	     	let all_page = 0;
+	     	if(num%10>0){
+	     		all_page=(num/10)+1;
+	     	}else{
+	     		all_page=num/10;
+	     	}
+	     	vm.allpage=all_page;
+	     }).then(()=>{
+	 		layui.use(['jquery','layer','element','laypage'],function(){
+			      window.jQuery = window.$ = layui.jquery;
+			      window.layer = layui.layer;
+		          var element = layui.element();
+		              laypage = layui.laypage;
+		          
+		          vm.changePage(1);
+		    });
+	     }).catch(function (error) {
+	         console.log(error);
+	     })
+
+	}
+})
+</script>
+</body>
+</html>

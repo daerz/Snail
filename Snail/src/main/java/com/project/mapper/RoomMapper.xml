@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+   <mapper namespace="com.project.dao.IRoomDao">
+   
+<!-- ====================用户表============================ -->
+
+	<select id="selectByTerm" parameterType="com.project.bean.RoomBean" resultType="com.project.bean.RoomBean">
+   		select * from room
+   		<where>
+   		r_flage = 0
+   		<if test=" r_id != 0 "> and r_id = #{r_id}</if>
+   		<if test=" r_num != 0 "> and r_num = #{r_num}</if>
+   		<if test=" r_rt_id != 0 "> and r_rt_id = #{r_rt_id}</if>
+   		<if test=" r_smoken != 0 "> and r_smoken = #{r_smoken}</if>
+   		<if test=" r_breakfast != 0"> and r_breakfast = #{r_breakfast}</if>
+   		<if test=" r_window != 0"> and r_window = #{r_window}</if>
+   		<if test=" r_state != 0 ">and r_state = #{r_state}</if>
+   		</where>
+   </select>
+
+    <update id="updateRoom" parameterType="com.project.bean.RoomBean">
+    	update room 
+    	<set>
+    		r_id = #{r_id},
+    		<if test="r_num != 0">r_num = #{r_num},</if>
+    		<if test="r_rt_id != 0 ">r_rt_id = #{r_rt_id},</if>
+    		<if test="r_price > 0 ">r_price = #{r_price},</if>
+    		<if test="r_discount>0">r_discount = #{r_discount},</if>
+    		<if test="r_smoken==1 or r_smoken==2">r_smoken = #{r_smoken},</if>
+    		<if test="r_breakfast==1 or r_breakfast==2">r_breakfast = #{r_breakfast},</if>
+    		<if test="r_window==1 or r_window==2">r_window = #{r_window},</if>
+    		<if test="r_state==1 or r_state==2 ">r_state = #{r_state},</if>
+    		<if test="r_note != '' and r_note != null ">r_note = #{r_note},</if>
+    		<if test="r_flage != 0 ">r_flage = #{r_flage}</if>
+    	</set>
+    	where r_id = #{r_id};
+    </update>
+    
+   
+    
+    
+   </mapper>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>个人信息</title>
+	<meta name="renderer" content="webkit">	
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">	
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">	
+	<meta name="apple-mobile-web-app-capable" content="yes">	
+	<meta name="format-detection" content="telephone=no">	
+	<link rel="stylesheet" type="text/css" href="common/layui/css/layui.css" media="all">
+	<link rel="stylesheet" type="text/css" href="common/bootstrap/css/bootstrap.css" media="all">
+	<link rel="stylesheet" type="text/css" href="common/global.css" media="all">
+	<link rel="stylesheet" type="text/css" href="css/animate.css">
+	<link rel="stylesheet" type="text/css" href="css/personal.css" media="all">
+	<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script src="https://cdn.bootcss.com/qs/6.5.1/qs.min.js"></script>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	
+<style>
+    
+.histogram-container{position:relative;margin-left:60px;margin-top:25px;margin-bottom:25px;}
+.histogram-bg-line{border:#999 solid;border-width:0 0px 1px 1px;border-right-color:#eee;overflow:hidden;width:99%;}
+.histogram-bg-line ul{overflow:hidden;border:#eee solid;border-width:1px 0 0 0;clear:both;}
+.histogram-bg-line li{float:left;overflow:hidden;background:#fff;}
+.histogram-bg-line li div{border-right:1px #eee solid;}
+.histogram-content{position:absolute;left:0px;top:0;width:99%;height:100%;}
+.histogram-content ul{height:100%;}
+.histogram-content li{float:left;height:100%;text-align:center;position:relative;}
+.histogram-box{position:relative;display:inline-block;height:100%;width:20px;}
+.histogram-content li a{position:absolute;bottom:0;right:0;display:block;width:20px;font-size:0;line-height:0;}
+.histogram-content li .histogram-name{position:absolute;bottom:-20px;left:0px;white-space:nowrap;display:inline-block;width:100%;font-size:15px;overflow:hidden;}
+.histogram-y{position:absolute;left:-60px;top:-10px;font:12px/1.8 verdana,arial;}
+.histogram-y li{text-align:right;width:55px;padding-right:5px;color:#333;}
+.histogram-bg-line li div,.histogram-y li{height:95px;/*控制单元格的高度及百分比的高度，使百分数与线条对其*/}
+#moneytitle{
+	font-size: 24px;
+	line-height:25px;
+	margin:20px auto 0 auto;
+	text-align:center;
+}
+#moneytitle input{
+	width:6%;
+	text-align:center;
+	line-height:38px;
+	height:38px;
+	padding:10px;
+	font-size:18px;
+}
+.layui-btn{
+	font-size:18px;
+	margin-left:20px;
+}
+</style>
+</head>
+
+<body>
+<div id="app">
+
+<div id="moneytitle">
+		<input value="" placeholder="年份" v-model="year"  type="text"> 
+			年Snail酒店财务统计报表
+			<div class="layui-btn " @click="numchange">查询</div> 
+</div> 
+
+
+<!-- <div class="layui-inline" id="inputcss">
+		    <div class="layui-input-inline">
+		    	<input value="" placeholder="请输入查询年份" v-model="year" class="layui-input search_input" type="text">
+		    </div>
+			<div id="ordernum" class="layui-btn search_btn" @click="numbtn">查询</div> -->
+			
+			
+	<div class="histogram-container" id="histogram-container"></div>
+	
+</div>
+<script>
+
+function histogram(){
+	var controls={};
+	var bgColor=new Array("#666666","#21AA7C","#2277BB","#dc7644","#BBAA22","#AA22AA","#338800","#1099EE","#ffcc33","#ED3810");
+	this.init=function(data,y){
+		setControls();
+		buildHtml(data,y);
+	}
+	function setControls(){
+		controls.histogramContainer=$("#histogram-container");
+		controls.histogramBgLineUL=controls.histogramContainer.children("div.histogram-bg-line");
+		controls.histogramContentUL=controls.histogramContainer.children("div.histogram-content");
+		controls.histogramY=controls.histogramContainer.children("div.histogram-y");
+	}
+	function buildHtml(data,y){
+		var len=data.length,perArr=new Array(),maxNum,maxTotal,yStr='';
+		var contentStr='',bgLineStr='',bgLineAll='';
+		var widthPer=Math.floor(100/len);
+		minWidth=len*21+60;
+		controls.histogramContainer.css("min-width",minWidth+"px");
+		
+		for(var a=0;a<len;a++){
+			perArr[a]=parseInt(data[a]['per']);		
+		}
+		maxNum=String(perArr.max());
+		if(maxNum.length>2){
+			var x=parseInt(maxNum.substr(maxNum.length-2,1))+1;
+			maxTotal=Math.floor(parseInt(maxNum/100))*100+x*10;
+		}else{
+			maxTotal=Math.floor(parseInt(maxNum/10))*10+10;
+		}
+		
+		//y轴部分
+		if(y=="%"){
+			yStr+='<li>100%</li><li>80%</li><li>60%</li><li>40%</li><li>20%</li><li>0%</li>';			
+		}else{
+			var avg=maxTotal/5;
+			for(i=5;i>=0;i--){
+				yStr+='<li>'+avg*i+'</li>';
+			}
+		}
+		
+		//柱状条部分
+		for(var i=0;i<len;i++){
+			var per=Math.floor(parseInt(data[i]['per'])/maxTotal*100);
+			var n=Math.floor(parseInt(per)/10);
+			contentStr+='<li style="width:'+widthPer+'%">';
+			contentStr+='<span class="histogram-box"><a style="height:'+per+'%'+';background:'+bgColor[n]+';" title="'+data[i]['per']+'"></a></span><span class="histogram-name">'+data[i]['name']+'</span>';
+			contentStr+='</li>';
+			bgLineStr+='<li style="width:'+widthPer+'%;"><div></div></li>';
+		}
+		
+		//背景方格部分
+		for(var j=0;j<5;j++){
+			bgLineAll+='<ul>'+bgLineStr+'</ul>';
+		}
+		bgLineAll='<div class="histogram-bg-line">'+bgLineAll+'</div>';
+		contentStr='<div class="histogram-content"><ul>'+contentStr+'</ul></div>';
+		yStr='<div class="histogram-y"><ul>'+yStr+'</ul></div>';
+		controls.histogramContainer.html(bgLineAll+contentStr+yStr);
+		controls.histogramContainer.css("height",controls.histogramContainer.height()+"px");//主要是解决IE6中的问题		
+	}
+}
+Array.prototype.max = function(){//最大值
+ return Math.max.apply({},this) 
+}
+
+var vm = new Vue({
+	el:"#app",
+	data:{
+		dataArr:{"data":[]},
+		year:"2019"
+	},
+	created:function(){
+		
+	},
+	mounted:function(){
+		this.numchange();
+		this.date = this.year;
+	},
+	methods:{
+		newPig:function(){
+			new histogram().init(this.dataArr.data);
+		},
+	    numchange:function(){
+	    		var myyear = this.year;
+				axios.get("/Snail/order/queryMoneyByMonth",{
+		  	    	params:{year:myyear}
+		  	    }).then(function (res) {
+		  	    	console.log(res.data)
+				 		/* var obj = {};
+				 		obj.id = 1;
+				 		obj[id] = 1; */
+				 		var id="";
+				 		var name="";
+				 		var per="";
+				 		vm.dataArr.data = [];
+				 	for(var i=1;i<13;i++){
+				 		var obj = {};
+				 		obj.id = i;
+				 		obj.name = i+"月份";
+				 		obj.per = res.data[i];
+				 		vm.dataArr.data.push(obj);
+				 	}	
+		         	console.log(vm.dataArr);
+		         })
+		         .then(()=>{
+		        	 this.newPig();
+		         })
+			
+	    
+	    }
+	}
+	
+})
+ 
+
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>维护信息</title>
+	<meta name="renderer" content="webkit">	
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">	
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">	
+	<meta name="apple-mobile-web-app-capable" content="yes">	
+	<meta name="format-detection" content="telephone=no">	
+	<link rel="stylesheet" type="text/css" href="common/layui/css/layui.css" media="all">
+	<link rel="stylesheet" type="text/css" href="common/bootstrap/css/bootstrap.css" media="all">
+	<link rel="stylesheet" type="text/css" href="common/global.css" media="all">
+	<link rel="stylesheet" type="text/css" href="css/personal.css" media="all">
+	<script type="text/javascript" src="js/vue-axios.js"></script>	
+	<script type="text/javascript" src="js/vue.js"></script>
+	<script type="text/javascript" src="js/qs.js"></script>
+</head>
+<body>
+<section class="layui-larry-box">
+	<div class="larry-personal" id="mif">
+	    <div class="layui-tab">
+            <blockquote class="layui-elem-quote news_search">
+		<div class="layui-inline">
+		    <div class="layui-input-inline" style="position:relative;">
+		    	<input value=""  placeholder="请输入损坏时间" class="layui-input date_input" type="date" v-model="brokenTime">
+		    	<div style="width:18px; height:20px; background-color:white; position:absolute; right:16px; top:2px; z-index:999;" ></div>
+		    </div>
+		    <div class="layui-input-inline">
+		    	<input value=""  placeholder="请输入维修号" class="layui-input search_input" type="text" v-model="brokenId">
+		    </div>
+		    <div class="layui-input-inline">
+		    	<input value=""  placeholder="请输入房间号" class="layui-input search_input" type="text" v-model="brokenNum">
+		    </div>
+		    <div class="layui-input-inline">
+		    	<select class="layui-input" style="width:143px;" v-model="brokenType">
+		    		<option value=""></option>
+		    		<option value="0">无需求</option>
+		    		<option value="1">未维护</option>
+		    		<option value="2">已维护</option>
+		    	</select>
+		    </div>
+		    <a class="layui-btn" @click="searchBroken">查询</a>
+		    <a class="layui-btn layui-btn-normal" @click="addBroken">新增维护</a>
+		</div>
+		
+	</blockquote>
+            
+		         <!-- 操作日志 -->
+                <div class="layui-form news_list">
+                    <table class="layui-table">
+					    <colgroup>
+						<col width="5%">
+						<col width="10%">
+						<col width="35%">
+						<col width="20%">
+						<col width="10%">
+						<col width="10%">
+						<col width="10%">
+					</colgroup>
+					<thead>
+						<tr>
+							<th>id</th>
+							<th>房间号</th>
+							<th>维护信息</th>
+							<th>维护时间</th>
+							<th>维护状态</th>
+							<th>维护更新</th>
+							<th>删除</th>
+						</tr>
+					</thead>
+					<tbody class="news_content" v-for="item in arr">
+						<tr>
+							<td>{{item.m_id}}</td>
+							<td>{{roomNum[item.m_r_id]}}</td>
+							<td>{{item.m_info}}</td>
+							<td>{{item.m_date}}</td>
+							<td>{{repairType[item.m_result]}}</td>
+							<td>
+								<a class="layui-btn layui-btn-mini" @click="updateBroken(item.m_id,roomNum[item.m_r_id],item.m_info)"><i class="iconfont icon-edit"></i> 维护更新</a>
+							</td>
+							<td>
+								<a class="layui-btn layui-btn-danger layui-btn-mini" @click="deleteBroken(item.m_id)"><i class="layui-icon"></i> 删除</a>
+							</td>
+						</tr>
+					</tbody>
+					</table>
+                     <div class="larry-table-page clearfix">
+				          <div id="page" class="page"></div>
+			         </div>
+			    </div>
+		    </div>
+		</div>
+	
+</section>
+<script type="text/javascript" src="common/layui/layui.js"></script>
+<script type="text/javascript" src="js/newslist.js"></script>
+<script type="text/javascript">
+var vm = new Vue({
+	el:"#mif",
+	data:{
+		searchType:1,
+		pageNum:1,
+		arr:[],
+		arrAll:[],
+		pages:1,
+		repairType:["无需求","未维护","已维护"],
+		roomNum:{},
+		roomType:{},
+		brokenTime:"",
+		brokenId:"",
+		brokenNum:"",
+		brokenType:""
+	},
+	methods:{
+		getBroken:function(){
+			axios.get("/Snail/maintain/pagenum",{params:{s_count:10}})
+			.then(response=>{
+				vm.pages = response.data.pageNum;
+			})
+			let pageN = this.pageNum;
+			axios.get("/Snail/maintain/page",{params:{
+				s_page:vm.pageNum,
+				s_count:10
+			}})
+	          .then(response=>{
+	        	  return response.data;
+	          })
+	          .then(data=>{
+	        	  this.arr = data.maintain;
+	          })
+		},
+		updateBroken:function(mid,rname,info){
+			layer.open({
+				title:"修改"+rname+"房维护信息",
+				content:`<select id="code" style="width:100%; height:36px; font-size:16px; padding-left:8px;">
+		     		<option value="1">未维护</option>
+		     		<option value="2">已维护</option>
+		     	</select>
+		     	<textarea id="msg" style="width:100%; margin-top:20px; padding-left:4px;" >`+info+`</textarea>
+		     	`,
+				btn: ['保存', '取消'], //可以无限个按钮
+				yes:function(index, layero){
+					layer.closeAll();
+					axios.put("/Snail/maintain/change",
+						Qs.stringify({
+							m_id:mid,
+							m_info:$("#msg").val(),
+							m_result:$("#code").val()
+						})
+					)
+					.then(response=>{
+						if(response.data){
+							if(vm.searchType==1){
+								vm.getBroken();
+							}else{
+								vm.searchBroken();
+								var start = (vm.pageNum-1)*10;
+								var end = start+10;
+								vm.arr = vm.arrAll.slice(start,end)
+							}
+							layer.open({
+								  content: '修改成功'
+								}); 
+						}else{
+							layer.open({
+								  content: '修改失败'
+								});
+						}
+					})
+					
+				}
+			})
+		},
+		deleteBroken:function(mid){
+			axios.delete("/Snail/maintain/remove",{params:{m_id:mid}})
+			.then(response=>{
+				return response.data;
+			})
+			.then(data=>{
+				if(data.result=="删除失败"){
+					layer.open({
+						content:"删除失败"
+					})
+				}else{
+					layer.open({
+						content:"删除成功"
+					})
+					if(vm.searchType==1){
+						vm.getBroken();
+					}else{
+						vm.searchBroken();
+					}
+					vm.getPgeNum();
+				}
+			})
+		},
+		searchBroken:function(){
+			if(this.brokenTime==""&&this.brokenId==""&&this.brokenNum==""&&this.brokenType==""){
+				this.searchType=1;
+				this.getBroken();
+				axios.get("/Snail/maintain/pagenum",{params:{s_count:10}})
+				.then(response=>{
+					vm.pages = response.data.pageNum;
+				})
+				.then(()=>{
+					layui.laypage({
+						
+						cont: 'page',
+						pages: vm.pages //总页数
+							,
+						groups: 5 //连续显示分页数
+							,
+						jump: function(obj, first) {
+							//得到了当前页，用于向服务端请求对应数据
+							var curr = obj.curr;
+							if(!first) {
+								vm.pageNum = obj.curr;
+								if(vm.searchType==1){
+									vm.getBroken();
+								}else{
+									var start = (vm.pageNum-1)*10;
+									var end = start+10;
+									vm.arr = vm.arrAll.slice(start,end)
+								}
+							}
+						}
+					})
+				})
+			}
+			if(this.brokenNum!=""){
+				if(this.roomType[this.brokenNum]==null){
+					layer.open({
+						content:"房间不存在"
+					})
+					return;
+				}
+			} 
+			var param = {};
+			if(this.brokenTime!=""){
+				param.m_date = this.brokenTime;
+			}
+			if(this.brokenId!=""){
+				param.m_id = this.brokenId;
+			}
+			if(this.brokenNum!=""){
+				param.m_r_id = this.roomType[this.brokenNum];
+			}
+			if(this.brokenType!=""){
+				param.m_result = this.brokenType;
+			}
+			axios.get("/Snail/maintain/term",{params:{...param}})
+			.then(response=>{
+				return response.data;
+			})
+			.then(data=>{
+				if(data.maintain.length==0){
+					layer.open({
+						content:"未查询到相关维护信息"
+					})
+				}else{
+					vm.searchType=2;
+					vm.arrAll = data.maintain;
+					vm.pages = vm.arrAll.length/10+1;
+					vm.arr = vm.arrAll.slice(0,10);
+					layui.laypage({
+						
+						cont: 'page',
+						pages: vm.pages //总页数
+							,
+						groups: 5 //连续显示分页数
+							,
+						jump: function(obj, first) {
+							//得到了当前页，用于向服务端请求对应数据
+							var curr = obj.curr;
+							if(!first) {
+								vm.pageNum = obj.curr;
+								if(vm.searchType==1){
+									vm.getBroken();
+								}else{
+									var start = (vm.pageNum-1)*10;
+									var end = start+10;
+									vm.arr = vm.arrAll.slice(start,end)
+								}
+							}
+						}
+					})
+				}
+			})
+		},
+		addBroken:function(){
+			axios.get("/Snail/users/dis")
+			.then(response=>{
+				return response.data;
+			})
+			.then(data=>{
+				vm.viparr = data;
+			})
+			.then(()=>{
+				layer.open({
+					title:"新增维护",
+					btn:["确定","取消"],
+					area:"400px",
+					content:`<form class="layui-form">
+								<div class="layui-form-item">
+									<input id="addroomnum" type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入房间号" class="layui-input">
+						  		</div>
+						  		 <div class="layui-form-item layui-form-text">
+							  	    <div class="layui-input-block" style="margin-left:0 !important;">
+							  	      <textarea id="addroominfo" placeholder="请输如损坏描述" class="layui-textarea" name="desc"></textarea>
+							  	    </div>
+						  	  	</div>
+							</form>`,
+							yes:function(index, layero){
+								layer.closeAll();
+								axios.post("/Snail/maintain/add",Qs.stringify({
+									m_r_id:vm.roomType[$("#addroomnum").val()],
+									m_info:$("#addroominfo").val()
+								}))
+								.then(response=>{
+									if(response.data.result=="添加成功"){
+										vm.getBroken();
+										layer.open({
+											content:"添加成功"
+										})
+									}else{
+										layer.open({
+											content:"添加失败"
+										})
+									}
+								})
+							}
+				})
+			})
+		},
+		getPgeNum:function(){
+			axios.get("/Snail/maintain/pagenum",{params:{s_count:10}})
+			.then(response=>{
+				vm.pages = response.data.pageNum;
+			})
+			.then(()=>{
+					if(vm.arr.length==0){
+						if(vm.searchType==2){
+							vm.pages -=1;
+						}
+						vm.pageNum -=1;
+						layui.laypage({
+							
+								cont: 'page',
+								pages: vm.pages //总页数
+									,
+								groups: 5 //连续显示分页数
+									,
+								jump: function(obj, first) {
+									//得到了当前页，用于向服务端请求对应数据
+									var curr = obj.curr;
+									if(!first) {
+										vm.pageNum = obj.curr;
+										if(vm.searchType==1){
+											vm.getBroken();
+										}else{
+											var start = (vm.pageNum-1)*10;
+											var end = start+10;
+											vm.arr = vm.arrAll.slice(start,end)
+										}
+									}
+								},
+								curr : vm.pageNum
+						})
+					}
+					if(vm.searchType==1){
+						vm.getBroken();
+					}else{
+						vm.searchBroken();
+						var start = (vm.pageNum-1)*10;
+						var end = start+10;
+						vm.arr = vm.arrAll.slice(start,end)
+					}
+			})
+			
+		}
+	},
+	created:function(){
+		axios.defaults.withCredentials = true;
+		axios.get("/Snail/room/all")
+		.then(response=>{return response.data})
+		.then(data=>{
+			data.forEach(item=>{
+					vm.roomNum[item.r_id] = item.r_num;
+					vm.roomType[item.r_num] = item.r_id;
+				})
+			})
+		.then(()=>{
+			vm.getBroken();
+		})
+		axios.get("/Snail/maintain/pagenum",{params:{s_count:10}})
+		.then(response=>{
+			vm.pages = response.data.pageNum;
+		})
+	},
+	mounted:function(){
+		layui.use(['jquery','layer','element','laypage'],function(){
+		      window.jQuery = window.$ = layui.jquery;
+		      window.layer = layui.layer;
+	          var element = layui.element(),
+	              laypage = layui.laypage;
+	          laypage({
+						cont: 'page',
+						pages: vm.pages //总页数
+							,
+						groups: 5 //连续显示分页数
+							,
+						jump: function(obj, first) {
+							//得到了当前页，用于向服务端请求对应数据
+							var curr = obj.curr;
+							if(!first) {
+								vm.pageNum = obj.curr;
+								if(vm.searchType==1){
+									vm.getBroken();
+								}else{
+									var start = (vm.pageNum-1)*10;
+									var end = start+10;
+									vm.arr = vm.arrAll.slice(start,end)
+								}
+							}
+						}
+					});
+	    });
+	}
+})
+
+	
+</script>
+</body>
+</html>

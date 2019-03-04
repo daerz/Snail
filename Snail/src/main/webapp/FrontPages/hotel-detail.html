@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Panagea - Premium site template for travel agencies, hotels and restaurant listing.">
+    <meta name="author" content="Ansonika">
+    <title>Snail | 房型展示</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description"
+	content="Panagea - Premium site template for travel agencies, hotels and restaurant listing.">
+<meta name="author" content="Ansonika">
+
+<!-- Favicons-->
+<!-- 拼图验证 -->
+<link rel="stylesheet" href="css/jigsaw.css">
+
+<link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" type="image/x-icon"
+	href="img/apple-touch-icon-57x57-precomposed.png">
+<link rel="apple-touch-icon" type="image/x-icon" sizes="72x72"
+	href="img/apple-touch-icon-72x72-precomposed.png">
+<link rel="apple-touch-icon" type="image/x-icon" sizes="114x114"
+	href="img/apple-touch-icon-114x114-precomposed.png">
+<link rel="apple-touch-icon" type="image/x-icon" sizes="144x144"
+	href="img/apple-touch-icon-144x144-precomposed.png">
+<!-- BASE CSS -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+<link href="css/vendors.css" rel="stylesheet">
+
+<!-- YOUR CUSTOM CSS -->
+<link href="css/custom.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+	<div id="page" class="theia-exception">
+
+		<header class="header menu_fixed" id="top_menu">
+			<div id="preloader">
+				<div data-loader="circle-side"></div>
+			</div>
+			<!-- /Page Preload -->
+			<div id="logo">
+				<a href="index.html"> <img src="img/logo/snail-1.png"
+					width="150" height="36" data-retina="true" alt=""
+					class="logo_normal"> <img src="img/logo/snail-3.png"
+					width="150" height="36" data-retina="true" alt=""
+					class="logo_sticky">
+				</a>
+			</div>
+			<ul id="top_menu">
+
+				<li id="sign-msg"><a href="#sign-in-dialog" id="sign-in"
+					class="login" title="Sign In">登 录</a></li>
+				
+			</ul>
+			<!-- /top_menu -->
+			<a href="#menu" class="btn_mobile">
+				<div class="hamburger hamburger--spin" id="hamburger">
+					<div class="hamburger-box">
+						<div class="hamburger-inner"></div>
+					</div>
+				</div>
+			</a>
+			<nav id="menu" class="main-menu">
+				<ul>
+					<li><span><a href="index.html">首页</a></span></li>
+
+					<li><span><a href="hotel-detail.html">房间</a></span></li>
+
+					<li id="info-show"><span><a href="user-info.html">会员信息</a></span></li>
+					<li id='reg-show'><span><a href="register.html">注册</a></span></li>
+					<li id='order-show'><span><a href="order-1.html">订单</a></span></li>
+				</ul>
+			</nav>
+
+		</header>
+		<!-- /header -->
+
+		<main>
+		<section class="hero_in hotels_detail">
+			<div class="wrapper">
+				<div class="container">
+					<h1 class="fadeInUp">
+						<span></span>酒店详细信息
+					</h1>
+				</div>
+			</div>
+		</section>
+		<!--/hero_in-->
+
+		<div class="bg_color_1">
+			<nav class="secondary_nav sticky_horizontal">
+				<div class="container">
+					<ul class="clearfix">
+						<li><a href="#description" class="active">描述</a></li>
+						<li><a href="#reviews">评论</a></li>
+						<li><a href="#sidebar">预订</a></li>
+					</ul>
+				</div>
+			</nav>
+			<div class="container margin_60_35">
+				<div class="row">
+					<div class="col-lg-8">
+						<section id="description">
+							<h2>Snail酒店</h2>
+							<p>
+								Snail酒店集团注册资金5亿元，成立于2018年，是<strong>CTO科技控股集团公司（世界五百强）</strong>下属的产业集团之一，现已成为全国性星级酒店集团。
+							</p>
+							<p>酒店地处风光旖旎的孵化园，依山傍海，拥有100万平方米园林景致，18个室内外泳池，601间雅致客房，700米登山木栈道，1.8公里跑步道。完美度假体验，尽在Snail酒店，
+								一座隐藏在城市中的世外桃源。</p>
+							<div class="row">
+								<div class="col-lg-6">
+									<ul class="bullets">
+										<li>Dolorem mediocritatem1</li>
+										<li>Mea appareat</li>
+										<li>Prima causae</li>
+										<li>Singulis indoctum</li>
+									</ul>
+								</div>
+								<div class="col-lg-6">
+									<ul class="bullets">
+										<li>Timeam inimicus</li>
+										<li>Oportere democritum</li>
+										<li>Cetero inermis</li>
+										<li>Pertinacia eum</li>
+									</ul>
+								</div>
+							</div>
+							<!-- /row -->
+							<hr>
+							<h3>房型展示</h3>
+							<div id="instagram-feed-hotel" class="clearfix"></div>
+							<hr>
+
+
+							
+
+							<!-- /rom_type -->
+
+							<!-- v-for -->
+							<div class="room_type first" v-for="(messages,i) in message">
+								<div class="row">
+									<div class="col-md-4" style="cursor: pointer;">
+										<a
+											@click.prevent="roomTypeDetail(messages[0].rt_id,messages[3][0][1],messages[3][0][2],beginTime,endTime)"><img
+											:src="messages[0].rt_img" class="img-fluid" alt="点击图片查看更多"></a>
+									</div>
+
+									<div class="col-md-8">
+										<h4 style="cursor: pointer;">{{messages[0].rt_name}}</h4>
+										<p v-if="messages[0].rt_note != null">{{messages[0].rt_note}}</p>
+										<p v-else>Sit an meis aliquam, cetero inermis vel ut. An
+											sit illum euismod facilisis, tamquam vulputate pertinacia eum
+											at.</p>
+										<ul class="hotel_facilities">
+											<li v-if="messages[0].rt_num == 1"><img
+												src="img/hotel_facilites_icon_2.svg" alt="">单人床</li>
+											<li v-else-if="messages[0].rt_num == 2"><img
+												src="img/hotel_facilites_icon_3.svg" alt="">双人床</li>
+											<li v-else-if="messages[0].rt_num == 3"><img
+												src="img/hotel_facilites_icon_3.svg" alt="">套房床</li>
+											<li v-else-if="messages[0].rt_num > 3"><img
+												src="img/hotel_facilites_icon_3.svg" alt="">多人床铺</li>
+											<li v-if="messages[1][0].si_entertainment != '无' && messages[1][0].si_entertainment != null && messages[1][0].si_entertainment != ''"><img
+												src="img/hotel_facilites_icon_4.svg" alt="">{{messages[1][0].si_entertainment}}</li>
+											<li v-if="messages[1][0].si_bath != '无' && messages[1][0].si_bath != null  && messages[1][0].si_bath != ''"><img
+												src="img/hotel_facilites_icon_6.svg" alt="">{{messages[1][0].si_bath}}</li>
+											<li v-if="messages[1][0].si_furniture != '无' && messages[1][0].si_furniture != null && messages[1][0].si_furniture != ''"><img
+												src="img/hotel_facilites_icon_7.svg" alt="">{{messages[1][0].si_furniture}}</li>
+											<li v-if="messages[1][0].si_airport != '无' && messages[1][0].si_airport != null && messages[1][0].si_airport != ''"><img
+												src="img/hotel_facilites_icon_8.svg" alt="">{{messages[1][0].si_airport}}</li>
+										</ul>
+									</div>
+								</div>
+								<div class="card">
+										<h5 class="mb-0">
+											<a aria-expanded="true" data-toggle="collapse"
+												:href="'#collapseOne_reccomendation'+i">价格一览</a>
+										</h5>
+
+									<div :id="'collapseOne_reccomendation'+i" class="collapse"
+										role="tabpanel" data-parent="#reccomendations">
+										<div class="card-body" v-for="(room, index) in messages[3]" style="height:70px">
+											<div style="font-size: 16px; line-height: 40px">
+												价格：￥{{room[0]}} <span
+													@click.prevent="booking(messages[0].rt_id,room[1],room[2],beginTime,endTime)"
+													style="cursor: pointer; text-align: center; float: right; background-color: #0054a6; color: white; width: 80px; height: 40px; line-height: 40px;">预订</span>
+												<div style="clear: both;"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- /row -->
+							</div>
+							<!-- v-for -->
+
+
+
+							
+							<hr>
+							<!-- 分页 -->
+
+							<!-- 分页 -->
+							<h3>酒店位置</h3>
+							<div style="margin-left: 60px">
+								<iframe src="map.html" style="width: 550px; height: 400px;"
+									frameborder="0" scrolling="no"></iframe>
+							</div>
+							<!-- End Map -->
+						</section>
+						<!-- /section -->
+
+
+
+						<section id="reviews">
+							<h2>评论</h2>
+
+
+							<hr>
+
+							<div class="reviews-container">
+								<div class="review-box clearfix" v-for="list in lists">
+									<figure class="rev-thumb">
+										<img src="img/avatar1.jpg" alt="">
+									</figure>
+									<div class="rev-content">
+										<div class="rating">
+											<i class="icon_star voted"
+												v-for="(lab,index) in list.c_score"></i>
+										</div>
+										<div class="rev-info">{{list.c_name.substring(0,5)}}****** – {{list.c_time}}
+										</div>
+										<div class="rev-text">
+											<p>{{list.c_content}}</p>
+										</div>
+									</div>
+									
+								</div>
+								<!-- /review-box -->
+
+							</div>
+							<!-- /review-container -->
+							<div class="float-right fix_mobile" style="margin-left:100px">
+								<button type="button" @click="upPage" class="btn_1 outline">上一页</button>
+								    &nbsp<span>{{totalpage}}/{{page}}</span>&nbsp
+								<button type="button" @click="nextPage" class="btn_1 outline">下一页</button>
+							</div>
+						</section>
+						
+						<!-- /section -->
+
+					</div>
+					<!-- /col -->
+
+					<aside class="col-lg-4" id="sidebar">
+						<div class="box_detail booking">
+							<div class="price">
+								<span><img alt="logo" src="img/logo/snail-3.png"> <small> </small></span>
+								<div class="score">
+									<strong style="margin-top:5px">snail</strong>
+								</div>
+							</div>
+
+							<div class="form-group" id="selectDate">
+								<input class="form-control" type="text" name="dates" id="date"
+									:value="beginTime+' > '+endTime" placeholder="何时..."> <i
+									class="icon_calendar"></i>
+							</div>
+
+							<div class="panel-dropdown">
+								<a href="#">住客人数 <span class="qtyTotal">{{rt_num}}</span></a>
+								<div class="panel-dropdown-content right">
+									<div class="qtyButtons">
+										<label>住客</label> <input type="text" name="qtyInput"
+											:value="rt_num" id="rt_num">
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group clearfix">
+								<div class="custom-select-form">
+									<select class="wide" id="r_breakfast">
+										<option disabled selected>是否需要为您准备早餐</option>
+										<option value="1">含早餐</option>
+										<option value="2">不含早餐</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group clearfix">
+								<div class="custom-select-form">
+									<select class="wide" id="r_smoken">
+										<option disabled selected>是否需要为您提供吸烟房</option>
+										<option value="1">吸烟房</option>
+										<option value="2">无烟房</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group clearfix">
+								<div class="custom-select-form">
+									<select class="wide" id="r_window">
+										<option disabled selected>您想要房间内是什么类型的窗型</option>
+										<option value="1">百叶窗</option>
+										<option value="2">落地窗</option>
+									</select>
+								</div>
+							</div>
+
+
+							<a @click="screen" style="color: white"
+								class=" add_top_30 btn_1 full-width purchase">查询</a>
+							<div class="text-center">
+								<small v-if="remind == 'No money charged in this step'">{{remind}}</small>
+								<small v-else style="color: red">{{remind}}</small>
+							</div>
+
+						</div>
+						<!-- <ul class="share-buttons">
+							<li><a class="fb-share" href="#0"><i class="social_facebook"></i> 脸书</a></li>
+							<li><a class="twitter-share" href="#0"><i class="social_twitter"></i> 推特</a></li>
+							<li><a class="gplus-share" href="#0"><i class="social_googleplus"></i> 谷歌</a></li>
+						</ul> -->
+					</aside>
+				</div>
+				<!-- /row -->
+			</div>
+			<!-- /container -->
+		</div>
+		<!-- /bg_color_1 --> </main>
+		<!--/main-->
+
+		<footer>
+			<div class="container margin_60_35">
+				<div class="row">
+					<div class="col-lg-5 col-md-12 p-r-5">
+						<p>
+							<img src="img/logo/snail-1.png" width="150" height="36"
+								data-retina="true" alt="">
+						</p>
+						<p>生活不只有诗与远方，还有Snail酒店在您身边，与您同行。</p>
+						<div class="follow_us">
+							<ul>
+								<li>Follow us</li>
+								<li><a href="#0"><i class="ti-facebook"></i></a></li>
+								<li><a href="#0"><i class="ti-twitter-alt"></i></a></li>
+								<li><a href="#0"><i class="ti-google"></i></a></li>
+								<li><a href="#0"><i class="ti-pinterest"></i></a></li>
+								<li><a href="#0"><i class="ti-instagram"></i></a></li>
+							</ul>
+						</div>
+					</div>
+
+
+
+					<div class="col-lg-3 col-md-6 ml-lg-auto">
+						<h5>帮助链接</h5>
+						<ul class="links">
+							<li><a href="login.html">登录</a></li>
+							<li><a href="register.html">注册</a></li>
+							<li><a href="blog.html">百度地图</a></li>
+						</ul>
+					</div>
+					<div class="col-lg-3 col-md-6">
+						<h5>联系我们</h5>
+						<ul class="contacts">
+							<li><a href="tel://61280932400"><i class="ti-mobile"></i>
+									+ 61 23 8093 3400</a></li>
+							<li><a href="mailto:info@Panagea.com"><i
+									class="ti-email"></i> info@Panagea.com</a></li>
+						</ul>
+
+					</div>
+				</div>
+				<!--/row-->
+				<hr>
+				<div class="row">
+					<div class="col-lg-6">
+						<ul id="footer-selector">
+							<li>
+								<div class="styled-select" id="lang-selector">
+									<select>
+										<option value="English" selected>简体中文</option>
+										<option value="French">English</option>
+										<option value="Spanish">Spanish</option>
+										<option value="Russian">Russian</option>
+									</select>
+								</div>
+							</li>
+							<li></li>
+							<li><img src="img/cards_all.svg" alt=""></li>
+						</ul>
+					</div>
+					<div class="col-lg-6">
+						<ul id="additional_links">
+							<li><a href="#0">条款与条件</a></li>
+							<li><a href="#0">隐私</a></li>
+							<li><span>© 2018 Snail</span></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</footer>
+		<!--/footer-->
+	</div>
+	<!-- page -->
+
+	<!-- Sign In Popup -->
+	
+	<div id="big">
+
+		<div id="sign-in-dialog" v-if="showmodal"
+			class="zoom-anim-dialog mfp-hide">
+
+			<div class="small-dialog-header">
+
+				<div class="btn-group">
+					<button
+						style="margin-left: 40px; width: 140px; color: darkgoldenrod"
+						type="button" class="btn btn-default" v-on:click="changeDisplay2">密码登录</button>
+					<button style="width: 140px; color: darkgoldenrod" type="button"
+						class="btn btn-default" v-on:click="changeDisplay">短信登录</button>
+				</div>
+
+				<!-- <button  v-on:click="changeDisplay2"><h3>Sign In</h3></button>
+			<button v-on:click="changeDisplay" style="margin-left: 30px;"><h3>Sign SMS</h3></button> -->
+			</div>
+
+
+			<div id="login" v-show="big2">
+
+				<div class="msg" style="color: red; text-align: center;">{{msg}}</div>
+
+				<form>
+					<div class="form-group">
+						<label>账户</label> <input class="form-control" v-model="u_name" onblur="isPhone(this.value)"
+							id="email"> <i class="ti-user"></i>
+					</div>
+					<div class="form-group">
+						<label>密码</label> <input type="password" class="form-control"
+							v-model="u_pass" id="password" maxlength="20"> <i class="icon_lock_alt"></i>
+					</div>
+					<div class="clearfix add_bottom_15">
+						<div class="checkboxes float-left">
+							<label class="container_check">记住账户 <input
+								type="checkbox"> <span class="checkmark"></span>
+							</label>
+						</div>
+						<div class="float-right mt-1">
+							<a id="forgot" href="change-pass.html">忘记密码?</a>
+						</div>
+
+					</div>
+					<!-- =========================== -->
+					<div class="container">
+
+						<div id="captcha" style="position: relative"></div>
+					</div>
+
+
+
+					<!-- =============================== -->
+					<!-- 				<div class="text-center"><input type="submit" value="登 录" class="btn_1 full-width"></div>
+ -->
+					<div class="text-center">
+						还没有账号？ <a href="register.html">注册</a>
+					</div>
+				</form>
+			</div>
+
+
+			<!-- ===================sms==================== -->
+			<!-- Sign In Popup -->
+			<!-- <div id="sign-in-dialog" class="zoom-anim-dialog mfp-hide" v-show="!big2">
+						
+					<div class="small-dialog-header">
+						
+						<h3>Sign In</h3>
+					</div> -->
+
+			<div id="reg" v-show="!big2">
+
+				<div class="msg" style="color: red; text-align: center;">{{msg}}</div>
+				<form>
+					<div class="form-group">
+						<label>账户</label> <input class="form-control" v-model="phone" onblur="isPhone(this.value)">
+						<i class="ti-user"></i>
+					</div>
+					<div class="form-group">
+
+						<!-- smsButten -->
+						<div class="register-pannel" id="register-pannel">
+
+							<div class="input-group" style="width: 150px; float: left;">
+								<input type="text" v-model="code" class="form-control"
+									placeholder="验证码"
+									style="float: right; height: 40px; width: 50px;" /> <span
+									class="glyphicon glyphicon-font form-control-feedback" />
+
+							</div>
+							<div style="float: left; width: 80px;">
+								<span class="register-msg-btn" v-show="show"
+									v-on:click="getCode"><input type="发送验证码" value="获取"
+									class="btn_1" id="submit-review"
+									style="width: 100px; height: 40px; margin-left: 20px"></span>
+								<span class="register-msg-btn" v-show="!show"><input
+									type="发送验证码" :value=count+ "s" class="btn_1" id="submit-review"
+									style="width: 100px; height: 40px; margin-left: 20px"></span>
+							</div>
+							<br />
+
+						</div>
+						<div class="clearfix add_bottom_15" style="margin-top: 30px;">
+							<div class="checkboxes float-left">
+								<label class="container_check">记住账户 <input
+									type="checkbox"> <span class="checkmark"></span>
+								</label>
+							</div>
+							<div class="float-right mt-1">
+								<a id="forgot" href="javascript:void(0);">忘记密码?</a>
+							</div>
+
+						</div>
+						<!-- =========================== -->
+						<div class="container2">
+
+							<div id="captcha2" style="position: relative"></div>
+						</div>
+
+
+						<!-- =============================== -->
+						<!-- 				<div class="text-center"><input type="submit" value="登 录" class="btn_1 full-width"></div>
+									-->
+						<div class="text-center">
+							还没有账号？ <a href="register.html">注册</a>
+						</div>
+						<div id="forgot_pw">
+							<div class="form-group">
+								<label>Please confirm login email below</label> <input
+									type="email" class="form-control" name="email_forgot"
+									id="email_forgot"> <i class="icon_mail_alt"></i>
+							</div>
+							<p>You will receive an email containing a link allowing you
+								to reset your password to a new preferred one.</p>
+							<div class="text-center">
+								<input type="submit" value="Reset Password" class="btn_1">
+							</div>
+						</div>
+					</div>
+				</form>
+				<!--form -->
+			</div>
+			<!-- /Sign In Popup -->
+
+		</div>
+	</div>
+	<!-- /Sign In Popup -->
+
+
+
+	<div id="toTop"></div>
+	<!-- Back to top button -->
+
+	<!-- COMMON SCRIPTS -->
+	<script src="js/jquery-2.2.4.min.js"></script>
+	<script src="js/vue.js"></script>
+	<script src="js/vue-axios.js"></script>
+	<script src="js/qs.js"></script>
+	<script type="text/javascript" src="js/jigsaw.js"></script>
+	<script type="text/javascript" src="js/hotel-detail.js"></script>
+	<!-- 用户登陆 -->
+	<script type="text/javascript" src="js/user.js"></script>
+
+
+
+	<script src="js/common_scripts.js"></script>
+	<script src="js/main.js"></script>
+	<script src="assets/validate.js"></script>
+
+	<!-- Map -->
+	<!-- 注释谷歌 -->
+	<!--	<script src="http://maps.googleapis.com/maps/api/js"></script>  -->
+	<script src="js/map_single_hotel.js"></script>
+	<script src="js/infobox.js"></script>
+
+	<!-- DATEPICKER  -->
+	<script>
+	$(function() {
+	  $('input[name="dates"]').daterangepicker({
+		  autoUpdateInput: false,
+		  opens: 'left',
+		  locale: {
+			  cancelLabel: 'Clear'
+		  }
+	  });
+	  $('input[name="dates"]').on('apply.daterangepicker', function(ev, picker) {
+		  $(this).val(picker.startDate.format('YYYY-MM-DD') + ' > ' + picker.endDate.format('YYYY-MM-DD'));
+	  });
+	  $('input[name="dates"]').on('cancel.daterangepicker', function(ev, picker) {
+		  $(this).val('');
+	  });
+	});
+	
+	
+	</script>
+
+	<!-- INPUT QUANTITY  -->
+	<script src="js/input_qty.js"></script>
+
+	<!-- INSTAGRAM FEED  -->
+	<script>
+	$(window).on('load', function(){
+			"use strict";
+			$.instagramFeed({
+				'username': 'hotelwailea',
+				'container': "#instagram-feed-hotel",
+				'display_profile': false,
+				'display_biography': false,
+				'display_gallery': true,
+				'get_raw_json': false,
+				'callback': null,
+				'styling': true,
+				'items': 12,
+				'items_per_row': 6,
+				'margin': 1 
+			});
+		});
+	
+	function isPhone(phone){ //alert(phone)
+		big.msg= "";
+	    var RegCellPhone = '^((17[0-9])|(14[0-9])|(13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$';
+	    var  falg=phone.search(RegCellPhone);
+	    if (falg==-1){ big.msg= "手机号不正确";
+	        this.focus();
+	    } }
+
+	</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:aop="http://www.springframework.org/schema/aop"
+		xmlns:tx="http://www.springframework.org/schema/tx" 
+		xmlns:context="http://www.springframework.org/schema/context"
+		xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd"> 
+		
+	<!-- mybatis -->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+		<property name="url" value="jdbc:mysql://127.0.0.1:3306/snail"></property>
+		<property name="username" value="root"></property>
+		<property name="password" value="123456"></property>
+	</bean>
+	<!-- sessionfactory -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<!--指定要使用到到mybatis配置文件-->
+	    <property name="configLocation" value="classpath:mybatis.xml"/>
+	    <!--用于配置mapper映射xml-->
+	    <property name="mapperLocations" value="classpath*:com/project/mapper/*.xml"/>
+	</bean>
+	<!-- 创建数据映射器-->
+<!-- 	<bean  class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.project.dao.impl"/>
+	</bean> -->
+
+	
+	<!-- =============================================================================== -->
+	
+	<!-- 事务 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	<!-- 开启事务注解 -->
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	
+	<!-- =============================================================================== -->
+	
+	<!-- 包扫描：扫描controller以外的注解 -->
+	<context:component-scan base-package="com"> 
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" /> 
+	</context:component-scan> 
+	
+	<!-- =============================================================================== -->
+	
+	<!-- shiro -->
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+	<!-- 自定义Realm -->
+	<bean id="userRealm" class="com.project.realm.UserRealm">
+		<property name="credentialsMatcher">
+			<bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+				<property name="hashAlgorithmName" value="MD5"></property>
+				<property name="hashIterations" value="1024"></property>
+			</bean>
+		</property>
+	</bean>
+	<bean id="adminRealm" class="com.project.realm.AdminRealm">
+		<property name="credentialsMatcher">
+			<bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+				<property name="hashAlgorithmName" value="MD5"></property>
+				<property name="hashIterations" value="1024"></property>
+			</bean>
+		</property>
+	</bean>
+	<bean id="telephoneRealm" class="com.project.realm.TelephoneRealm" />
+	<!-- 安全管理器 -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<!-- 多realm的配置 -->
+		<property name="authenticator" ref="myModularRealmAuthenticator"></property>
+		<property name="realms">
+			<list>
+				<ref bean="adminRealm"/>
+				<ref bean="userRealm" />
+				<ref bean="telephoneRealm" />
+			</list>
+		</property>
+	</bean>
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="securityManager"></property>
+		<property name="loginUrl" value="/AdminPages/login.html"></property>
+		<property name="filterChainDefinitions">
+			<value>
+				/manageUser/login = anon
+				/AdminPages/login.html = anon
+				/AdminPages/*.html = authc
+				/cart-1.html = authc
+				/cart-2.html = authc
+				/cart-3.html = authc
+				/order-1.html = authc
+				/logout = logout
+			</value>
+		</property>
+	</bean>
+	<!-- 配置多个realm的时候如何认证 -->
+	<bean id="myModularRealmAuthenticator" class="com.project.tools.MyModularRealmAuthenticator">
+		<property name="authenticationStrategy">
+			<!-- 认证策略 -->
+			<!-- <bean class="org.apache.shiro.authc.pam.AllSuccessfulStrategy"></bean> -->
+			<bean class="org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy"></bean>
+		</property>
+	</bean>
+	
+	<!-- =============================================================================== -->
+	
+	<!-- aspecj -->
+	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+	
+	
+	<!-- ==============redis配置===================== -->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	        <property name="locations">
+	            <list>
+	                <value>classpath:jdbc.properties</value>
+	                <value>classpath:redis.properties</value>
+	            </list>
+	        </property>
+    	</bean>
+	<!-- redis连接池 -->
+	<bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
+	        <property name="maxIdle" value="${redis.maxIdle}" />
+	        <property name="maxTotal" value="${redis.maxActive}" />
+	        <property name="maxWaitMillis" value="${redis.maxWait}" />
+	        <property name="testOnBorrow" value="${redis.testOnBorrow}" />
+	    </bean>
+	 <!-- 配置JedisConnectionFactory -->
+	    <bean id="jedisConnectionFactory"
+	        class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+	        <property name="hostName" value="${redis.host}" />
+	        <property name="port" value="${redis.port}" />
+	        <property name="database" value="${redis.dbIndex}" />
+	        <property name="poolConfig" ref="poolConfig" />
+	    </bean>
+	    <!-- 配置RedisTemplate -->
+	    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+	        <property name="connectionFactory" ref="jedisConnectionFactory" />
+	    </bean>
+	    
+	    <!-- 配置RedisCacheManager -->
+	    <bean id="redisCacheManager" class="org.springframework.data.redis.cache.RedisCacheManager">
+	        <constructor-arg name="redisOperations" ref="redisTemplate" />
+	        <property name="defaultExpiration" value="${redis.expiration}" />
+	    </bean>
+	    
+	    <!-- 配置RedisCacheConfig -->
+	    <bean id="redisCacheConfig" class="com.project.util.RedisCacheConfig">
+	        <constructor-arg ref="jedisConnectionFactory" />
+	        <constructor-arg ref="redisTemplate" />
+	        <constructor-arg ref="redisCacheManager" />
+	    </bean>
+	    
+	    <!-- 操作redis的模板对象 -->
+	   <bean id="redisUtil" class="com.project.util.RedisUtil">
+	        <constructor-arg ref="redisTemplate" />
+	    </bean>
+	    
+	    <!-- 配置监听类 -->
+	   <bean id="messageListener" class="org.springframework.data.redis.listener.adapter.MessageListenerAdapter">
+	    	<constructor-arg>
+	    		<bean class="com.project.listener.OrderTimeListener"></bean>
+	    	</constructor-arg>
+	    </bean>
+	    
+	    <!-- 配置监听者容器  -->
+ 	    <bean id="redisContainer" class="org.springframework.data.redis.listener.RedisMessageListenerContainer">
+	    		<property name="connectionFactory" ref="jedisConnectionFactory"></property>
+	    		<property name="messageListeners">
+	    				<map>
+	    					<entry key-ref="messageListener">
+	    						<list>
+	    						<bean class="org.springframework.data.redis.listener.ChannelTopic">
+	    							<constructor-arg value="__keyevent@0__:expired"/>
+	    						</bean>
+	    				<!-- 		 <bean class="org.springframework.data.redis.listener.ChannelTopic">
+                            		<constructor-arg value="__keyevent@1__:expired" />
+		                        </bean>
+		                        <bean class="org.springframework.data.redis.listener.PatternTopic">
+		                            <constructor-arg value="*" />
+		                        </bean>
+		                        <bean class="org.springframework.data.redis.listener.PatternTopic">
+		                            <constructor-arg value="'__key*__:*" />
+		                        </bean> -->
+	    						</list>
+	    					</entry>
+	    				</map>
+	    		</property>
+	    </bean>
+</beans>

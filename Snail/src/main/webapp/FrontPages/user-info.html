@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Panagea - Premium site template for travel agencies, hotels and restaurant listing.">
+    <meta name="author" content="Ansonika">
+    <title>Snail | 用户信息</title>
+
+    <!-- Favicons-->
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" type="image/x-icon" href="img/apple-touch-icon-57x57-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="72x72" href="img/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="114x114" href="img/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="144x144" href="img/apple-touch-icon-144x144-precomposed.png">
+
+    <!-- BASE CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+	<link href="css/vendors.css" rel="stylesheet">
+
+    <!-- YOUR CUSTOM CSS -->
+    <link href="css/custom.css" rel="stylesheet">
+    <!-- vue -->
+
+<script src="js/vue.js"></script>
+<!-- axios -->
+<script src="js/vue-axios.js"></script>
+<!-- qs -->
+<script src="js/qs.js"></script>
+</head>
+
+<body id="login_bg">
+	
+	<nav id="menu" class="fake_menu"></nav>
+	
+	<div id="preloader">
+		<div data-loader="circle-side"></div>
+	</div>
+	<!-- End Preload -->
+	
+	<div id="login">
+		<aside>
+			<figure>
+				<a href="index.html"><img src="img/logo/snail-3.png" width="155" height="36" data-retina="true" alt="" class="logo_sticky"></a>
+			</figure>
+			<div class="container">
+				<div class="row">
+						<div class="col-12">
+						<div class="invoice-title add_top_30">
+							<h4>会员详细信息</h4><h3 class="float-right"></h3>
+						</div>
+						<hr>
+						
+						<div class="row">
+							<div class="col-6">
+								<address>
+								<strong>用户信息</strong><br>
+									会员账号<br>
+									姓名<br>
+									性别<br>
+								</address>
+							</div>
+							<div class="col-6 text-right">
+								<address>
+									<strong></strong><br>
+									{{phone}}<br>
+									{{name}}<br>
+									{{sex}}<br>
+								</address>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-6">
+								<address>
+									<strong>会员信息</strong><br>
+									会员级别<br>
+									注册时间
+								</address>
+							</div>
+							<div class="col-6 text-right">
+								<address>
+									<strong></strong><br>
+									{{code}}<br>
+									{{time}}<br>
+								</address>
+							</div>
+						</div>
+					</div>
+				</div>
+			 <hr>
+			<a @click.prevent="chanagepass" style="color: cornsilk;" class="btn_1 rounded full-width">修改密码</a>
+			<a href="change-info.html" class="btn_1 rounded full-width">修改用户信息</a>
+			<div class="text-center add_top_10">退出登录? <strong><a href="http://localhost:8080/Snail/logout">注 销!</a></strong></div>
+			<div class="copy">© 2019 Snail</div>
+		</aside>
+	</div>
+	<!-- /login -->
+		</div>
+		
+		<script src="js/user-info.js"></script>
+	<!-- COMMON SCRIPTS -->
+    <script src="js/jquery-2.2.4.min.js"></script>
+    <script src="js/common_scripts.js"></script>
+    <script src="js/main.js"></script>
+	<script src="assets/validate.js"></script>	
+  
+</body>
+</html>

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description"
+	content="Panagea - Premium site template for travel agencies, hotels and restaurant listing.">
+<meta name="author" content="Ansonika">
+<title>Snail | 评论</title>
+
+<!-- Favicons-->
+<link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" type="image/x-icon"
+	href="img/apple-touch-icon-57x57-precomposed.png">
+<link rel="apple-touch-icon" type="image/x-icon" sizes="72x72"
+	href="img/apple-touch-icon-72x72-precomposed.png">
+<link rel="apple-touch-icon" type="image/x-icon" sizes="114x114"
+	href="img/apple-touch-icon-114x114-precomposed.png">
+<link rel="apple-touch-icon" type="image/x-icon" sizes="144x144"
+	href="img/apple-touch-icon-144x144-precomposed.png">
+
+<!-- BASE CSS -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+<link href="css/vendors.css" rel="stylesheet">
+
+<!-- YOUR CUSTOM CSS -->
+<link href="css/custom.css" rel="stylesheet">
+<!-- vue -->
+
+<script src="js/vue.js"></script>
+<!-- axios -->
+<script src="js/vue-axios.js"></script>
+<!-- qs -->
+<script src="js/qs.js"></script>
+</head>
+
+<body>
+
+	<div id="page">
+
+		<header class="header menu_fixed" id="top_menu">
+		<div id="preloader"><div data-loader="circle-side"></div></div><!-- /Page Preload -->
+		<div id="logo">
+			<a href="index.html">
+				<img src="img/logo/snail-1.png" width="150" height="36" data-retina="true" alt="" class="logo_normal">
+				<img src="img/logo/snail-3.png" width="150" height="36" data-retina="true" alt="" class="logo_sticky">
+			</a>
+		</div>
+		<ul id="top_menu">
+			
+			<li id="sign-msg"><a href="#sign-in-dialog" id="sign-in" class="login" title="Sign In">登 录</a></li>
+ 		</ul>
+		<!-- /top_menu -->
+		<a href="#menu" class="btn_mobile">
+			<div class="hamburger hamburger--spin" id="hamburger">
+				<div class="hamburger-box">
+					<div class="hamburger-inner"></div>
+				</div>
+			</div>
+		</a>
+		<nav id="menu" class="main-menu">
+			<ul>
+				<li><span><a href="index.html">首页</a></span></li>
+				
+				<li><span><a href="hotel-detail.html">房间</a></span></li>
+				
+				<li id="info-show"><span><a href="user-info.html">会员信息</a></span></li>
+				<li id = 'reg-show'><span><a href="register.html">注册</a></span></li>
+				<li><span><a href="order-1.html">订单</a></span></li>
+			</ul>
+		</nav>
+
+	</header>
+		<!-- /header -->
+
+		<main>
+		<section class="hero_in contacts">
+			<div class="wrapper">
+				<div class="container">
+					<h1 class="fadeInUp">
+						<span></span>会员入住评价
+					</h1>
+				</div>
+			</div>
+		</section>
+		<!--/hero_in--> <!--/contact_info-->
+
+		<div class="bg_color_1">
+			<div class="container margin_80_55">
+				<div class="row justify-content-between">
+					<div class="col-lg-5">
+						<div class="map_contact"><iframe src="map.html" width="600" height="300" frameborder="0" scrolling="no"></iframe></div>
+						<!-- /map -->
+					</div>
+					<div class="col-lg-6">
+						<h4>入住评价</h4>
+
+						<div id="message-contact"></div>
+						<div class="msg" style="color: red; text-align: center;">{{msg}}</div>
+						<div class="add-review">
+								<form>
+									<div class="row">
+										<div class="form-group col-md-6">
+											<label>会员账号</label>
+											<input type="text" name="name_review" id="name_review" placeholder="" class="form-control" v-model="phone" disabled>
+										</div>
+										<div class="form-group col-md-6">
+											<label>订单号</label>
+											<input type="email" name="email_review" id="email_review" class="form-control" v-model="order" disabled>
+										</div>
+										<div class="form-group col-md-6">
+											<label>评分 </label>
+											
+											<div >
+											<select  v-model="score" id="email_contact" class="form-control" value="5">
+												<option value=1>1</option>
+												<option value=2>2</option>
+												<option value=3>3</option>
+												<option value=4>4</option>
+												<option value=5>5</option>
+												
+											</select>
+											</div>
+										</div>
+										<div class="form-group col-md-12">
+											<label>请您对我们酒店提出宝贵的意见</label>
+											<textarea name="review_text" id="review_text" class="form-control" style="height:80px;" v-model="comment"></textarea>
+										</div>
+										<div class="form-group col-md-12 add_top_20">
+											<input  value="提交" @click="changeinfo" class="btn_1" id="submit-review" >
+										</div>
+									</div>
+								</form>
+							</div>
+					</div>
+
+				</div>
+
+
+			</div>
+		</div>
+		<!-- /row -->
+	</div>
+	<!-- /container -->
+	</div>
+	<!-- /bg_color_1 -->
+	</main>
+	<!--/main-->
+
+	<footer>
+		<div class="container margin_60_35">
+			<div class="row">
+				<div class="col-lg-5 col-md-12 p-r-5">
+					<p><img src="img/logo/snail-1.png" width="150" height="36" data-retina="true" alt=""></p>
+					<p>生活不只有诗与远方，还有Snail酒店在您身边，与您同行。</p>
+					<div class="follow_us">
+						<ul>
+							<li>Follow us</li>
+							<li><a href="#0"><i class="ti-facebook"></i></a></li>
+							<li><a href="#0"><i class="ti-twitter-alt"></i></a></li>
+							<li><a href="#0"><i class="ti-google"></i></a></li>
+							<li><a href="#0"><i class="ti-pinterest"></i></a></li>
+							<li><a href="#0"><i class="ti-instagram"></i></a></li>
+						</ul>
+					</div>
+				</div>
+				
+				
+				
+				<div class="col-lg-3 col-md-6 ml-lg-auto">
+					<h5>帮助链接</h5>
+					<ul class="links">
+						<li><a href="login.html">登录</a></li>
+						<li><a href="register.html">注册</a></li>
+						<li><a href="blog.html">百度地图</a></li>
+					</ul>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<h5>联系我们</h5>
+					<ul class="contacts">
+						<li><a href="tel://61280932400"><i class="ti-mobile"></i> + 61 23 8093 3400</a></li>
+						<li><a href="mailto:info@Panagea.com"><i class="ti-email"></i> info@Panagea.com</a></li>
+					</ul>
+					
+				</div>
+			</div>
+			<!--/row-->
+			<hr>
+			<div class="row">
+				<div class="col-lg-6">
+					<ul id="footer-selector">
+						<li>
+							<div class="styled-select" id="lang-selector">
+								<select>
+									<option value="English" selected>简体中文</option>
+									<option value="French">English</option>
+									<option value="Spanish">Spanish</option>
+									<option value="Russian">Russian</option>
+								</select>
+							</div>
+						</li>
+						<li>
+							
+						</li>
+						<li><img src="img/cards_all.svg" alt=""></li>
+					</ul>
+				</div>
+				<div class="col-lg-6">
+					<ul id="additional_links">
+						<li><a href="#0">条款与条件</a></li>
+						<li><a href="#0">隐私</a></li>
+						<li><span>© 2018 Snail</span></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!--/footer-->
+	</div>
+	<!-- page -->
+
+	<!-- Sign In Popup -->
+	<div id="big">
+
+		<div id="sign-in-dialog" v-if="showmodal"
+			class="zoom-anim-dialog mfp-hide">
+
+			<div class="small-dialog-header">
+
+				<div class="btn-group">
+					<button
+						style="margin-left: 20px; width: 160px; color: darkgoldenrod"
+						type="button" class="btn btn-default" v-on:click="changeDisplay2">密码登录</button>
+					<button style="width: 160px; color: darkgoldenrod" type="button"
+						class="btn btn-default" v-on:click="changeDisplay">短信登录</button>
+				</div>
+
+				<!-- <button  v-on:click="changeDisplay2"><h3>Sign In</h3></button>
+				<button v-on:click="changeDisplay" style="margin-left: 30px;"><h3>Sign SMS</h3></button> -->
+			</div>
+
+
+			<div id="login" v-show="big2">
+
+				<div class="msg" style="color: red; text-align: center;">{{msg}}</div>
+
+				<form>
+					<div class="form-group">
+						<label>账户</label> <input class="form-control" v-model="u_name"
+							id="email"> <i class="ti-user"></i>
+					</div>
+					<div class="form-group">
+						<label>密码</label> <input type="password" class="form-control"
+							v-model="u_pass" id="password"> <i class="icon_lock_alt"></i>
+					</div>
+					<div class="clearfix add_bottom_15">
+						<div class="checkboxes float-left">
+							<label class="container_check">记住账户 <input
+								type="checkbox"> <span class="checkmark"></span>
+							</label>
+						</div>
+						<div class="float-right mt-1">
+							<a id="forgot" href="change-pass.html">忘记密码?</a>
+						</div>
+
+					</div>
+					<!-- =========================== -->
+					<div class="container">
+
+						<div id="captcha" style="position: relative"></div>
+					</div>
+
+
+
+					<!-- =============================== -->
+					<!-- 				<div class="text-center"><input type="submit" value="登 录" class="btn_1 full-width"></div>
+	 -->
+					<div class="text-center">
+						还没有账号？ <a href="register.html">注册</a>
+					</div>
+				</form>
+			</div>
+
+
+			<!-- ===================sms==================== -->
+			<!-- Sign In Popup -->
+			<!-- <div id="sign-in-dialog" class="zoom-anim-dialog mfp-hide" v-show="!big2">
+							
+						<div class="small-dialog-header">
+							
+							<h3>Sign In</h3>
+						</div> -->
+
+			<div id="reg" v-show="!big2">
+
+				<div class="msg" style="color: red; text-align: center;">{{msg}}</div>
+				<form>
+					<div class="form-group">
+						<label>账户</label> <input type="email" class="form-control"
+							v-model="phone" id="email"> <i class="ti-user"></i>
+					</div>
+					<div class="form-group">
+
+						<!-- smsButten -->
+						<div class="register-pannel" id="register-pannel">
+
+							<div class="input-group" style="width: 150px; float: left;">
+								<input type="text" v-model="code" class="form-control"
+									placeholder="验证码"
+									style="float: right; height: 40px; width: 50px;" /> <span
+									class="glyphicon glyphicon-font form-control-feedback" />
+
+							</div>
+							<div style="float: left; width: 80px;">
+								<span class="register-msg-btn" v-show="show"
+									v-on:click="getCode">发送验证码</span> <span
+									class="register-msg-btn" v-show="!show">{{count}} s</span>
+							</div>
+							<br />
+
+						</div>
+						<div class="clearfix add_bottom_15" style="margin-top: 30px;">
+							<div class="checkboxes float-left">
+								<label class="container_check">记住账户 <input
+									type="checkbox"> <span class="checkmark"></span>
+								</label>
+							</div>
+							<div class="float-right mt-1">
+								<a id="forgot" href="javascript:void(0);">忘记密码?</a>
+							</div>
+
+						</div>
+						<!-- =========================== -->
+						<div class="container2">
+
+							<div id="captcha2" style="position: relative"></div>
+						</div>
+
+
+						<!-- =============================== -->
+						<!-- 				<div class="text-center"><input type="submit" value="登 录" class="btn_1 full-width"></div>
+										-->
+						<div class="text-center">
+							还没有账号？ <a href="register.html">注册</a>
+						</div>
+						<div id="forgot_pw">
+							<div class="form-group">
+								<label>Please confirm login email below</label> <input
+									type="email" class="form-control" name="email_forgot"
+									id="email_forgot"> <i class="icon_mail_alt"></i>
+							</div>
+							<p>You will receive an email containing a link allowing you
+								to reset your password to a new preferred one.</p>
+							<div class="text-center">
+								<input type="submit" value="Reset Password" class="btn_1">
+							</div>
+						</div>
+					</div>
+				</form>
+				<!--form -->
+			</div>
+			<!-- /Sign In Popup -->
+            </div>
+            </div>
+            
+			<div id="toTop"></div>
+			<!-- Back to top button -->
+
+			<!-- COMMON SCRIPTS -->
+			<script src="js/jquery-2.2.4.min.js"></script>
+			<script src="js/common_scripts.js"></script>
+			<script src="js/main.js"></script>
+			<script src="assets/validate.js"></script>
+			<script src="js/comment.js"></script>
+			<!-- 	<script src="js/user.js"></script>
+ -->
+			<!-- SPECIFIC SCRIPTS -->
+			
+			<!-- <script src="http://ditu.google.cn/maps/api/js"></script> -->
+			<script src="js/mapmarker.jquery.js"></script>
+			<script src="js/mapmarker_func.jquery.js"></script>
+</body>
+</html>

@@ -1,0 +1,493 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description"
+	content="Panagea - Premium site template for travel agencies, hotels and restaurant listing.">
+<meta name="author" content="Ansonika">
+<title>Snail | 房间展示</title>
+
+<!-- Favicons-->
+<link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" type="image/x-icon"
+	href="img/apple-touch-icon-57x57-precomposed.png">
+<link rel="apple-touch-icon" type="image/x-icon" sizes="72x72"
+	href="img/apple-touch-icon-72x72-precomposed.png">
+<link rel="apple-touch-icon" type="image/x-icon" sizes="114x114"
+	href="img/apple-touch-icon-114x114-precomposed.png">
+<link rel="apple-touch-icon" type="image/x-icon" sizes="144x144"
+	href="img/apple-touch-icon-144x144-precomposed.png">
+
+<!-- 拼图验证 adsada-->
+<link rel="stylesheet" href="css/jigsaw.css">
+
+
+<!-- BASE CSS -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+<link href="css/vendors.css" rel="stylesheet">
+
+<!-- YOUR CUSTOM CSS -->
+<link href="css/custom.css" rel="stylesheet">
+<style>
+img {
+	display: block;
+	width: 100%;
+}
+</style>
+</head>
+
+<body>
+
+	<div id="page">
+
+		<header class="header menu_fixed" id="top_menu">
+			<div id="preloader">
+				<div data-loader="circle-side"></div>
+			</div>
+			<!-- /Page Preload -->
+			<div id="logo">
+				<a href="index.html"> <img src="img/logo/snail-1.png" width="150"
+					height="36" data-retina="true" alt="" class="logo_normal"> <img
+					src="img/logo/snail-3.png" width="150" height="36"
+					data-retina="true" alt="" class="logo_sticky">
+				</a>
+			</div>
+			<ul id="top_menu">
+				<li><a href="cart-1.html" class="cart-menu-btn" title="Cart"><strong></strong></a></li>
+
+				<li id="sign-msg"><a href="#sign-in-dialog" id="sign-in"
+					class="login" title="Sign In">登 录</a></li>
+				<li><a href="user-info.html" class="wishlist_bt_top"
+					title="会员信息">会员信息</a></li>
+			</ul>
+			<!-- /top_menu -->
+			<a href="#menu" class="btn_mobile">
+				<div class="hamburger hamburger--spin" id="hamburger">
+					<div class="hamburger-box">
+						<div class="hamburger-inner"></div>
+					</div>
+				</div>
+			</a>
+			<nav id="menu" class="main-menu">
+				<ul>
+					<li><span><a href="index.html">首页</a></span></li>
+
+					<li><span><a href="hotel-detail.html">房间</a></span></li>
+
+					<li id="info-show"><span><a href="user-info.html">会员信息</a></span></li>
+					<li id='reg-show'><span><a href="register.html">注册</a></span></li>
+					<li><span><a href="order-1.html">订单</a></span></li>
+				</ul>
+			</nav>
+
+		</header>
+		<!-- /header -->
+
+		<main>
+		<section class="hero_in contacts">
+			<div class="wrapper">
+				<div class="container">
+					<h1 class="fadeInUp">
+						<span></span>房间详情
+					</h1>
+				</div>
+			</div>
+		</section>
+		<!--/hero_in-->
+
+
+		<div class="bg_color_1">
+			<div class="container margin_80_55">
+				<div class="row justify-content-between">
+					<div class="col-lg-5">
+
+						<img :src="roomType.rt_img" alt="">
+
+						<!-- /map -->
+					</div>
+					<div class="col-lg-6">
+						<h4>{{roomType.rt_name}}</h4>
+						<p v-if="roomType.rt_note != null">{{roomType.rt_note}}</p>
+						<p v-else>Ex quem dicta delicata usu, zril vocibus maiestatis
+							in qui.</p>
+						<div id="message-contact"></div>
+
+						<div class="row">
+							<div class="col-md-6" v-if="roomTypeStatic.si_furniture != '无'">
+								<div class="form-group">
+									<label>家具：</label> {{roomTypeStatic.si_furniture}}
+								</div>
+							</div>
+							<div class="col-md-6"
+								v-if="roomTypeStatic.si_entertainment != '无'">
+								<div class="form-group">
+									<label>环境：</label> {{roomTypeStatic.si_entertainment}}
+								</div>
+							</div>
+						</div>
+						<!-- /row -->
+						<div class="row">
+							<div class="col-md-6" v-if="roomTypeStatic.si_bath != '无'">
+								<div class="form-group">
+									<label>洗浴：</label> {{roomTypeStatic.si_bath}}
+								</div>
+							</div>
+							<div class="col-md-6" v-if="roomTypeStatic.si_airport != '无'">
+								<div class="form-group">
+									<label>服务：</label> {{roomTypeStatic.si_airport}}
+								</div>
+							</div>
+						</div>
+						<!-- /row -->
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>房间价格：</label> ￥{{message.r_price}}
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label>居住时间：</label> {{beginTime}} -- {{endTime}}
+								</div>
+							</div>
+						</div>
+						<div class="form-group" v-if="roomTypeStatic.si_cancleRule != '无'">
+							<label>使用规则：</label> {{roomTypeStatic.si_cancleRule}}
+						</div>
+						<div class="form-group" v-if="roomTypeStatic.si_useRule != '无'">
+							<label>取消规则：</label> {{roomTypeStatic.si_useRule}}
+						</div>
+						<button class="btn_1 rounded"
+							style="padding-top: 25px; padding-left: 150px; padding-right: 150px; padding-bottom: 25px"
+							@click.prevent="booking()">预订</button>
+					</div>
+				</div>
+				<!-- /row -->
+			</div>
+			<!-- /container -->
+		</div>
+		<!-- /bg_color_1 -->
+		<div class="grid">
+			<ul class="magnific-gallery">
+				<li v-for="img in imgs" style="margin-left:10px">
+					<figure>
+						<img :src="img.rti_path" alt="">
+					</figure>
+				</li>
+			</ul>
+		</div>
+
+		</main>
+		<!--/main-->
+
+		<footer>
+			<div class="container margin_60_35">
+				<div class="row">
+					<div class="col-lg-5 col-md-12 p-r-5">
+						<p>
+							<img src="img/logo/snail-1.png" width="150" height="36"
+								data-retina="true" alt="">
+						</p>
+						<p>生活不只有诗与远方，还有Snail酒店在您身边，与您同行。</p>
+						<div class="follow_us">
+							<ul>
+								<li>Follow us</li>
+								<li><a href="#0"><i class="ti-facebook"></i></a></li>
+								<li><a href="#0"><i class="ti-twitter-alt"></i></a></li>
+								<li><a href="#0"><i class="ti-google"></i></a></li>
+								<li><a href="#0"><i class="ti-pinterest"></i></a></li>
+								<li><a href="#0"><i class="ti-instagram"></i></a></li>
+							</ul>
+						</div>
+					</div>
+
+
+
+					<div class="col-lg-3 col-md-6 ml-lg-auto">
+						<h5>帮助链接</h5>
+						<ul class="links">
+							<li><a href="login.html">登录</a></li>
+							<li><a href="register.html">注册</a></li>
+							<li><a href="blog.html">百度地图</a></li>
+						</ul>
+					</div>
+					<div class="col-lg-3 col-md-6">
+						<h5>联系我们</h5>
+						<ul class="contacts">
+							<li><a href="tel://61280932400"><i class="ti-mobile"></i>
+									+ 61 23 8093 3400</a></li>
+							<li><a href="mailto:info@Panagea.com"><i
+									class="ti-email"></i> info@Panagea.com</a></li>
+						</ul>
+
+					</div>
+				</div>
+				<!--/row-->
+				<hr>
+				<div class="row">
+					<div class="col-lg-6">
+						<ul id="footer-selector">
+							<li>
+								<div class="styled-select" id="lang-selector">
+									<select>
+										<option value="English" selected>简体中文</option>
+										<option value="French">English</option>
+										<option value="Spanish">Spanish</option>
+										<option value="Russian">Russian</option>
+									</select>
+								</div>
+							</li>
+							<li></li>
+							<li><img src="img/cards_all.svg" alt=""></li>
+						</ul>
+					</div>
+					<div class="col-lg-6">
+						<ul id="additional_links">
+							<li><a href="#0">条款与条件</a></li>
+							<li><a href="#0">隐私</a></li>
+							<li><span>© 2018 Snail</span></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</footer>
+		<!--/footer-->
+	</div>
+	<!-- page -->
+
+
+	<!-- Sign In Popup -->
+	<div id="big">
+
+		<div id="sign-in-dialog" v-if="showmodal"
+			class="zoom-anim-dialog mfp-hide">
+
+			<div class="small-dialog-header">
+
+				<div class="btn-group">
+					<button
+						style="margin-left: 40px; width: 140px; color: darkgoldenrod"
+						type="button" class="btn btn-default" v-on:click="changeDisplay2">密码登录</button>
+					<button style="width: 140px; color: darkgoldenrod" type="button"
+						class="btn btn-default" v-on:click="changeDisplay">短信登录</button>
+				</div>
+
+				<div id="login" v-show="big2">
+
+					<div class="msg" style="color: red; text-align: center;">{{msg}}</div>
+
+					<form>
+						<div class="form-group">
+							<label>账户</label> <input class="form-control" v-model="u_name"
+								id="email"> <i class="ti-user"></i>
+						</div>
+						<div class="form-group">
+							<label>密码</label> <input type="password" class="form-control"
+								v-model="u_pass" id="password"> <i
+								class="icon_lock_alt"></i>
+						</div>
+						<div class="clearfix add_bottom_15">
+							<div class="checkboxes float-left">
+								<label class="container_check">记住账户 <input
+									type="checkbox"> <span class="checkmark"></span>
+								</label>
+							</div>
+							<div class="float-right mt-1">
+								<a id="forgot" href="change-pass.html">忘记密码?</a>
+							</div>
+
+						</div>
+						<!-- =========================== -->
+						<div class="container">
+
+							<div id="captcha" style="position: relative"></div>
+						</div>
+
+
+
+						<!-- =============================== -->
+						<!-- 				<div class="text-center"><input type="submit" value="登 录" class="btn_1 full-width"></div>
+ -->
+						<div class="text-center">
+							还没有账号？ <a href="register.html">注册</a>
+						</div>
+					</form>
+				</div>
+
+
+				<!-- ===================sms==================== -->
+				<!-- Sign In Popup -->
+				<!-- <div id="sign-in-dialog" class="zoom-anim-dialog mfp-hide" v-show="!big2">
+						
+					<div class="small-dialog-header">
+						
+						<h3>Sign In</h3>
+					</div> -->
+
+				<div id="reg" v-show="!big2">
+
+					<div class="msg" style="color: red; text-align: center;">{{msg}}</div>
+					<form>
+						<div class="form-group">
+							<label>账户</label> <input class="form-control" v-model="phone">
+							<i class="ti-user"></i>
+						</div>
+						<div class="form-group">
+
+							<!-- smsButten -->
+							<div class="register-pannel" id="register-pannel">
+
+								<div class="input-group" style="width: 150px; float: left;">
+									<input type="text" v-model="code" class="form-control"
+										placeholder="验证码"
+										style="float: right; height: 40px; width: 50px;" /> <span
+										class="glyphicon glyphicon-font form-control-feedback" />
+
+								</div>
+								<div style="float: left; width: 80px;">
+									<span class="register-msg-btn" v-show="show"
+										v-on:click="getCode"><input type="发送验证码" value="获取"
+										class="btn_1" id="submit-review"
+										style="width: 100px; height: 40px; margin-left: 20px"></span>
+									<span class="register-msg-btn" v-show="!show"><input
+										type="发送验证码" :value=count+ "s" class="btn_1"
+										id="submit-review"
+										style="width: 100px; height: 40px; margin-left: 20px"></span>
+								</div>
+								<br />
+
+							</div>
+							<div class="clearfix add_bottom_15" style="margin-top: 30px;">
+								<div class="checkboxes float-left">
+									<label class="container_check">记住账户 <input
+										type="checkbox"> <span class="checkmark"></span>
+									</label>
+								</div>
+								<div class="float-right mt-1">
+									<a id="forgot" href="javascript:void(0);">忘记密码?</a>
+								</div>
+
+							</div>
+							<!-- =========================== -->
+							<div class="container2">
+
+								<div id="captcha2" style="position: relative"></div>
+							</div>
+
+
+							<!-- =============================== -->
+							<!-- 				<div class="text-center"><input type="submit" value="登 录" class="btn_1 full-width"></div>
+									-->
+							<div class="text-center">
+								还没有账号？ <a href="register.html">注册</a>
+							</div>
+							<div id="forgot_pw">
+								<div class="form-group">
+									<label>Please confirm login email below</label> <input
+										type="email" class="form-control" name="email_forgot"
+										id="email_forgot"> <i class="icon_mail_alt"></i>
+								</div>
+								<p>You will receive an email containing a link allowing you
+									to reset your password to a new preferred one.</p>
+								<div class="text-center">
+									<input type="submit" value="Reset Password" class="btn_1">
+								</div>
+							</div>
+						</div>
+					</form>
+					<!--form -->
+				</div>
+				</div>
+				
+				<!-- /Sign In Popup -->
+
+			</div>
+		</div>
+		<!-- /Sign In Popup -->
+
+		<div id="toTop"></div>
+		<!-- Back to top button -->
+
+<<<<<<< .mine
+	<!-- COMMON SCRIPTS -->
+	<script src="js/jquery-2.2.4.min.js"></script>
+	<script src="js/common_scripts.js"></script>
+	<script src="js/main.js"></script>
+	<script src="assets/validate.js"></script>
+	<script src="js/vue.js"></script>
+	<script src="js/vue-axios.js"></script>
+	<!-- 用户登陆 -->
+	<!-- 图片验证 -->
+	<script type="text/javascript" src="js/jigsaw.js"></script>
+	<script src="js/user.js"></script>
+
+	<!-- SPECIFIC SCRIPTS -->
+	<!-- <script src="http://ditu.google.cn/maps/api/js"></script> -->
+	<script src="js/mapmarker.jquery.js"></script>
+	<script src="js/mapmarker_func.jquery.js"></script>
+
+		<script type="text/javascript">
+	var vm = new Vue({
+		el:'#page',
+		data:{
+			message:"",
+			roomTypeStatic:'',
+			roomType:'',
+			imgs:[],
+			rt_id:'',
+			price:'',
+			num:'',
+			idCount:'',
+			beginTime:'',
+			endTime:''
+		},
+		created:function(){
+			axios.defaults.withCredentials = true;
+			this.rt_id = this.getUrlParam("rt_id");
+			this.r_num = this.getUrlParam("r_num");
+			this.idCount = this.getUrlParam("idCount");
+			this.beginTime = this.getUrlParam("beginTime");
+			this.endTime = this.getUrlParam("endTime");
+			var url = "/Snail/roomType/source/rtid";
+			axios.get(url,{
+				params:{
+					rt_id:this.rt_id,
+					idCount:this.idCount
+				}
+			}).then( response => {
+				return response.data;
+				
+			})
+			.then((data)=>{
+				if(data[0] == "页面走丢了")
+					location.href="404.html";
+				vm.message = data[3][0],
+				vm.roomType = data[0],
+				vm.roomTypeStatic = data[2][0],
+				vm.imgs = data[1];
+			})
+			.catch( err => {
+				console.log(err);
+			})
+		},
+		
+		methods:{
+			getUrlParam:function(key){
+				var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)");
+				var r = window.location.search.substr(1).match(reg);
+				if (r != null)return decodeURIComponent(r[2]); return null;
+			},
+			booking:function(){
+				location.href="cart-1.html?rt_id="+this.rt_id+"&r_num="+this.r_num+"&idCount="+this.idCount+"&beginTime="+this.beginTime+"&endTime="+this.endTime+"";
+			}
+		}
+	})
+	
+	</script>
+</body>
+</html>

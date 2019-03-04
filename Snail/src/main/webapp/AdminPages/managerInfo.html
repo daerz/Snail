@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>个人信息</title>
+	<meta name="renderer" content="webkit">	
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">	
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">	
+	<meta name="apple-mobile-web-app-capable" content="yes">	
+	<meta name="format-detection" content="telephone=no">	
+	<link rel="stylesheet" type="text/css" href="common/layui/css/layui.css" media="all">
+	<link rel="stylesheet" type="text/css" href="common/bootstrap/css/bootstrap.css" media="all">
+	<link rel="stylesheet" type="text/css" href="common/global.css" media="all">
+	<link rel="stylesheet" type="text/css" href="css/personal.css" media="all">
+	<script type="text/javascript" src="js/vue-axios.js"></script>	
+	<script type="text/javascript" src="js/vue.js"></script>
+	<script type="text/javascript" src="js/qs.js"></script>
+</head>
+<body>
+<section class="layui-larry-box">
+	<div class="larry-personal" id="mif">
+	    <div class="layui-tab">
+            <blockquote class="layui-elem-quote news_search">
+		
+		
+	</blockquote>
+            
+		         <!-- 操作日志 -->
+                <div class="layui-form news_list">
+                    <table class="layui-table">
+					    <colgroup>
+						<col width="10%">
+						<col width="24%">
+						<col width="24%">
+						<col width="14%">
+						<col width="14%">
+						<col width="14%">
+					</colgroup>
+					<thead>
+						<tr>
+							<th>id</th>
+							<th>用户名</th>
+							<th>角色</th>
+							<th>修改权限</th>
+							<th>修改密码</th>
+							<th>删除用户</th>
+						</tr>
+					</thead>
+					<tbody class="news_content" v-for="item in arr">
+						<tr>
+							<td>{{item.m_id}}</td>
+							<td>{{item.m_name}}</td>
+							<td>{{item.role}}</td>
+							<td>
+								<a class="layui-btn layui-btn-mini" @click="updateRole(item.m_name)"><i class="iconfont icon-edit"></i> 修改权限</a>
+							</td>
+							<td>
+								<a class="layui-btn layui-btn-normal layui-btn-mini" @click="updatePwd(item.m_name)"><i class="layui-icon"></i>修改密码</a>
+							</td>
+							<td>
+								<a class="layui-btn layui-btn-danger layui-btn-mini" @click="deleteManager(item.m_name)"><i class="layui-icon"></i> 删除</a>
+							</td>
+						</tr>
+					</tbody>
+					</table>
+                     <div class="larry-table-page clearfix">
+				          <div id="page" class="page"></div>
+			         </div>
+			    </div>
+			     <div class="layui-row" id="update" style="display: none;">
+			     	<select>
+			     		<option>admin</option>
+			     		<option>cashier</option>
+			     	</select>
+			     </div>
+		    </div>
+		</div>
+	
+</section>
+<script type="text/javascript" src="common/layui/layui.js"></script>
+<script type="text/javascript" src="js/newslist.js"></script>
+<script type="text/javascript">
+var vm = new Vue({
+	el:"#mif",
+	data:{
+		pageNum:1,
+		arr:[],
+		pages:1,
+		role:""
+	},
+	methods:{
+		getManager:function(){
+			let pageN = this.pageNum;
+			axios.get("/Snail/users/manageUser",{
+	        	  params:{
+		        	  	page:pageN
+	        	  	}
+	        	  })
+	          .then(response=>{
+	        	  return response.data;
+	          })
+	          .then(data=>{
+	        	  this.arr = data.list;
+	          })
+		},
+		deleteManager:function(m_name){
+			layer.open({
+				content: '确定删除'+m_name+'？',
+				  btn: ['确定', '取消'], //可以无限个按钮
+				  yes:function(index, layero){
+					//按钮【按钮一】的回调
+					  axios.delete("/Snail/users/manageUser",{
+						  params:{
+							  name:m_name
+						  }
+					  })
+					  .then(response=>{
+						  if(response.data){
+							  layer.open({
+								  content: '删除成功'
+								}); 
+							  
+							 
+							  if(vm.arr.length==1){
+								  vm.pageNum -= 1;
+								  vm.pages -= 1;
+							  }
+							  vm.changeLayPage();
+							  vm.getManager();
+						  }else{
+							  layer.open({
+								  content: '删除失败'
+								});  
+						  }
+					  })
+				  }
+				})
+		},
+		updateRole:function(name){
+			layer.open({
+				title:"修改"+name+"权限",
+				content:`<select id="role" style="width:100%; height:36px; font-size:16px; padding-left:8px;">
+		     		<option>admin</option>
+		     		<option>cashier</option>
+		     	</select>`,
+				btn: ['保存', '取消'], //可以无限个按钮
+				yes:function(index, layero){
+					layer.closeAll();
+					axios.put("/Snail/users/manageUser",
+						Qs.stringify({
+							m_name:name,
+							role:$("#role").val()
+						})
+					)
+					.then(response=>{
+						if(response.data){
+							vm.getManager();
+							layer.open({
+								  content: '修改成功'
+								}); 
+						}else{
+							layer.open({
+								  content: '修改失败'
+								});
+						}
+					})
+					
+				}
+			})
+		},
+		updatePwd:function(name){
+			layer.open({
+				title:"修改"+name+"密码",
+				content:`
+		     			<input type="password" id="pass" style="width:100%; height:36px; font-size:16px; padding-left:8px;" placeholder="请输入密码"></input>
+		     			<input type="password" id="passT" style="margin-top:16px; width:100%; height:36px; font-size:16px; padding-left:8px;" placeholder="请再次输入密码"></input>
+				`,
+				btn: ['保存', '取消'], //可以无限个按钮
+				yes:function(index, layero){
+					layer.closeAll();
+					console.log($("#role").val());
+					axios.put("/Snail/users/manageUser/pass",
+						Qs.stringify({
+							m_name:name,
+							m_pass:$("#pass").val(),
+							pass_two:$("#passT").val()
+						})
+					)
+					.then(response=>{
+						if(response.data){
+							layer.open({
+								  content: '修改成功'
+								}); 
+						}else{
+							layer.open({
+								  content: '修改失败'
+								});
+						}
+					})
+					
+				}
+			})
+		},
+		changeLayPage:function(){
+			layui.laypage({
+				cont: 'page',
+				pages: vm.pages //总页数
+					,
+				groups: 5 //连续显示分页数
+					,
+				jump: function(obj, first) {
+					//得到了当前页，用于向服务端请求对应数据
+					var curr = obj.curr;
+					if(!first) {
+						vm.pageNum = obj.curr;
+						vm.getManager();
+					}
+				},
+				curr : vm.pageNum
+			});
+		}
+	},
+	created:function(){
+		axios.defaults.withCredentials = true;
+		axios.get("/Snail/users/manageUser?page=1")
+		.then(response=>{return response.data})
+		.then(data=>{vm.pages=data.page})
+	},
+	mounted:function(){
+		this.getManager();
+		layui.use(['jquery','layer','element','laypage'],function(){
+		      window.jQuery = window.$ = layui.jquery;
+		      window.layer = layui.layer;
+	          var element = layui.element(),
+	              laypage = layui.laypage;
+	          laypage({
+						cont: 'page',
+						pages: vm.pages //总页数
+							,
+						groups: 5 //连续显示分页数
+							,
+						jump: function(obj, first) {
+							//得到了当前页，用于向服务端请求对应数据
+							var curr = obj.curr;
+							if(!first) {
+								vm.pageNum = obj.curr;
+								vm.getManager();
+							}
+						}
+					});
+	    });
+	}
+})
+	
+</script>
+</body>
+</html>

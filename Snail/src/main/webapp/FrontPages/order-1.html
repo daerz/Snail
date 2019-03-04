@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Panagea - Premium site template for travel agencies, hotels and restaurant listing.">
+    <meta name="author" content="Ansonika">
+    <title>Snail | 订单</title>
+
+    <!-- Favicons-->
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" type="image/x-icon" href="img/apple-touch-icon-57x57-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="72x72" href="img/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="114x114" href="img/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="144x144" href="img/apple-touch-icon-144x144-precomposed.png">
+
+    <!-- BASE CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+	<link href="css/vendors.css" rel="stylesheet">
+
+    <!-- YOUR CUSTOM CSS -->
+    <link href="css/custom.css" rel="stylesheet">
+	<script src="js/vue-resource.js"></script>
+	<script src="js/vue-axios.js"></script>
+	<script src="js/vue.js"></script>
+	<script src="js/qs.js"></script>
+</head>
+
+<body>
+	
+	<div  class="theia-exception">
+		
+	<header class="header menu_fixed" id="top_menu">
+		<div id="preloader"><div data-loader="circle-side"></div></div><!-- /Page Preload -->
+		<div id="logo">
+			<a href="index.html">
+				<img src="img/logo/snail-1.png" width="150" height="36" data-retina="true" alt="" class="logo_normal">
+				<img src="img/logo/snail-3.png" width="150" height="36" data-retina="true" alt="" class="logo_sticky">
+			</a>
+		</div>
+		<ul id="top_menu">
+			
+			<li id="sign-msg"><a href="#sign-in-dialog" id="sign-in" class="login" title="Sign In">登 录</a></li>
+ 		</ul>
+		<!-- /top_menu -->
+		<a href="#menu" class="btn_mobile">
+			<div class="hamburger hamburger--spin" id="hamburger">
+				<div class="hamburger-box">
+					<div class="hamburger-inner"></div>
+				</div>
+			</div>
+		</a>
+		<nav id="menu" class="main-menu">
+			<ul>
+				<li><span><a href="index.html">首页</a></span></li>
+				
+				<li><span><a href="hotel-detail.html">房间</a></span></li>
+				
+				<li id="info-show"><span><a href="user-info.html">会员信息</a></span></li>
+				<li id = 'reg-show'><span><a href="register.html">注册</a></span></li>
+				<li><span><a href="order-1.html">订单</a></span></li>
+			</ul>
+		</nav>
+
+	</header>
+	<!-- /header -->
+	
+	<main>
+		<div class="hero_in cart_section">
+			<div class="wrapper">
+				<img style="max-width: 100%;max-height: 100%;" alt="" src="/Snail/FrontPages/img/timg.jpg">
+					
+				</div>
+			</div>
+		</div>
+		<!--/hero_in-->
+
+		<div class="bg_color_1" id="order-1">
+			<div class="container margin_60_35">
+				<div class="row">
+					<div class="col-lg-8">
+						<div class="box_cart">
+						<table class="table table-striped cart-list">
+							<thead>
+								<tr>
+									<th>
+										订单号
+									</th>
+									<th>
+										时间
+									</th>
+									<th>
+										金额
+									</th>
+									<th>
+										支付状态
+									</th>
+									<th>
+										操作
+									</th>
+								</tr>
+							</thead>
+							<tbody >
+								
+								<tr v-for="(value,i) in orderList">
+									<td>
+										<div class="thumb_cart">
+											<img src="http://via.placeholder.com/150x150/ccc/fff/thumb_cart_1.jpg"  alt="Image">
+										</div>
+										<span class="item_cart">{{value.o_id}}</span>
+									</td>
+									
+									<td>
+										{{value.o_intime}}<br>
+										{{value.o_outtime}}
+									</td>
+									
+									<td>
+										<strong>{{value.o_r_price}}RMB</strong>
+									</td>
+									
+									<td v-if="value.o_state==0">
+										<strong>未支付</strong>
+									</td>
+									<td v-if="value.o_state>0">
+										<strong>已支付</strong>
+									</td>
+									
+									<td v-if="value.o_state==1"><!-- class="options" style="width:10%; text-align:center;"> -->
+										<a href="javaScript:void(0)" @click="backOut(value.o_id )" ><span class="ti-trash"></span><span class="icon-name">撤销</span></span></a>
+									</td>
+									<td v-if="value.o_state==0"><!-- class="options" style="width:10%; text-align:center;"> -->
+										<a href="javaScript:void(0)" @click="checkOut(value.o_id )" ><span    class="ti-linkedin"><span class="icon-name">支付</span></span></a>
+										<a href="javaScript:void(0)" @click="backOut(value.o_id )" ><span class="ti-trash"></span><span class="icon-name">撤销</span></span></a>
+									</td>
+									<td v-if="value.o_state==2 || value.o_state==3">
+										<span>无法操作</span>
+									</td>
+									<td v-if="value.o_state==4">
+										<a href="javaScript:void(0)"  @click="comment(value.o_id)" ><span class="icon-edit-1"></span><span class="i-name">评论</span></a>
+									</td>
+									
+								</tr>
+								
+							</tbody>
+						</table>
+						<div class="cart-options clearfix">
+							<div class="float-left">
+								<div class="apply-coupon">
+									<div class="form-group">
+										<input type="text" id="page" name="coupon-code" value="" placeholder="输入页数" class="form-control">
+									</div>
+									<div class="form-group">
+									&nbsp<span>{{currentPage}}/{{totalPage}} </span>&nbsp
+										<button type="button" class="btn_1 outline" @click="getPage">按页查询</button>
+										
+									</div>
+								</div>
+							</div>
+							<div class="float-right fix_mobile">
+								<button type="button" @click="lastPage" class="btn_1 outline">上一页</button>
+								<button type="button" @click="nextPage" class="btn_1 outline">下一页</button>
+							</div>
+						</div>
+						<!-- /cart-options -->
+					</div>
+					</div>
+					<!-- /col -->
+					
+					<aside class="col-lg-4" id="sidebar">
+						<div class="box_detail">
+							<div id="total_cart">
+								<img style="max-width: 100%;max-height: 100%;" alt="" src="/Snail/FrontPages/img/hotel_1.jpg">
+								<!-- Total <span class="float-right">69.00$</span> -->
+							</div>
+							<!-- <ul class="cart_details">
+								 <li>From <span>02-11-18</span></li>
+								<li>To <span>04-11-18</span></li>
+								<li>Adults <span>2</span></li>
+								<li>Childs <span>1</span></li> 
+							</ul> -->
+							<a href="" class="btn_1 full-width purchase">戳一戳</a>
+							<div class="text-center"><small>小惊喜</small></div>
+						</div>
+					</aside>
+				</div>
+				<!-- /row -->
+			</div>
+			<!-- /container -->
+			<div id="alipay" style="display: none;"></div>
+			<div id="refund" style="display: none;"></div>
+		</div>
+		<!-- /bg_color_1 -->
+	</main>
+	<!--/main-->
+	
+	<footer>
+		<div class="container margin_60_35">
+			<div class="row">
+				<div class="col-lg-5 col-md-12 p-r-5">
+					<p><img src="img/logo/snail-1.png" width="150" height="36" data-retina="true" alt=""></p>
+					<p>生活不只有诗与远方，还有Snail酒店在您身边，与您同行。</p>
+					<div class="follow_us">
+						<ul>
+							<li>Follow us</li>
+							<li><a href="#0"><i class="ti-facebook"></i></a></li>
+							<li><a href="#0"><i class="ti-twitter-alt"></i></a></li>
+							<li><a href="#0"><i class="ti-google"></i></a></li>
+							<li><a href="#0"><i class="ti-pinterest"></i></a></li>
+							<li><a href="#0"><i class="ti-instagram"></i></a></li>
+						</ul>
+					</div>
+				</div>
+				
+				
+				
+				<div class="col-lg-3 col-md-6 ml-lg-auto">
+					<h5>帮助链接</h5>
+					<ul class="links">
+						<li><a href="login.html">登录</a></li>
+						<li><a href="register.html">注册</a></li>
+						<li><a href="blog.html">百度地图</a></li>
+					</ul>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<h5>联系我们</h5>
+					<ul class="contacts">
+						<li><a href="tel://61280932400"><i class="ti-mobile"></i> + 61 23 8093 3400</a></li>
+						<li><a href="mailto:info@Panagea.com"><i class="ti-email"></i> info@Panagea.com</a></li>
+					</ul>
+					
+				</div>
+			</div>
+			<!--/row-->
+			<hr>
+			<div class="row">
+				<div class="col-lg-6">
+					<ul id="footer-selector">
+						<li>
+							<div class="styled-select" id="lang-selector">
+								<select>
+									<option value="English" selected>简体中文</option>
+									<option value="French">English</option>
+									<option value="Spanish">Spanish</option>
+									<option value="Russian">Russian</option>
+								</select>
+							</div>
+						</li>
+						<li>
+							
+						</li>
+						<li><img src="img/cards_all.svg" alt=""></li>
+					</ul>
+				</div>
+				<div class="col-lg-6">
+					<ul id="additional_links">
+						<li><a href="#0">条款与条件</a></li>
+						<li><a href="#0">隐私</a></li>
+						<li><span>© 2018 Snail</span></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!--/footer-->
+	</div>
+	<!-- page -->
+	
+	<!-- Sign In Popup -->
+	<div id="sign-in-dialog" class="zoom-anim-dialog mfp-hide">
+		<div class="small-dialog-header">
+			<h3>Sign In</h3>
+		</div>
+		<form>
+			<div class="sign-in-wrapper">
+				<a href="#0" class="social_bt facebook">Login with Facebook</a>
+				<a href="#0" class="social_bt google">Login with Google</a>
+				<div class="divider"><span>Or</span></div>
+				<div class="form-group">
+					<label>Email</label>
+					<input type="email" class="form-control" name="email" id="email">
+					<i class="icon_mail_alt"></i>
+				</div>
+				<div class="form-group">
+					<label>Password</label>
+					<input type="password" class="form-control" name="password" id="password" value="">
+					<i class="icon_lock_alt"></i>
+				</div>
+				<div class="clearfix add_bottom_15">
+					<div class="checkboxes float-left">
+						<label class="container_check">Remember me
+						  <input type="checkbox">
+						  <span class="checkmark"></span>
+						</label>
+					</div>
+					<div class="float-right mt-1"><a id="forgot" href="javascript:void(0);">Forgot Password?</a></div>
+				</div>
+				<div class="text-center"><input type="submit" value="Log In" class="btn_1 full-width"></div>
+				<div class="text-center">
+					Don’t have an account? <a href="register.html">Sign up</a>
+				</div>
+				<div id="forgot_pw">
+					<div class="form-group">
+						<label>Please confirm login email below</label>
+						<input type="email" class="form-control" name="email_forgot" id="email_forgot">
+						<i class="icon_mail_alt"></i>
+					</div>
+					<p>You will receive an email containing a link allowing you to reset your password to a new preferred one.</p>
+					<div class="text-center"><input type="submit" value="Reset Password" class="btn_1"></div>
+				</div>
+			</div>
+		</form>
+		<!--form -->
+	</div>
+	<!-- /Sign In Popup -->
+	
+	<div id="toTop"></div><!-- Back to top button -->
+	
+	<!-- COMMON SCRIPTS -->
+    <script src="js/jquery-2.2.4.min.js"></script>
+    <script src="js/common_scripts.js"></script>
+    <script src="js/main.js"></script>
+	<script src="assets/validate.js"></script>
+	<script src="js/order-1.js"></script>
+	
+	
+  
+</body>
+</html>

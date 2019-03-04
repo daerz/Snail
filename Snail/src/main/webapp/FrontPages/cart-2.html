@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Panagea - Premium site template for travel agencies, hotels and restaurant listing.">
+    <meta name="author" content="Ansonika">
+    <title>Snail | 订单信息</title>
+
+    <!-- Favicons-->
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" type="image/x-icon" href="img/apple-touch-icon-57x57-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="72x72" href="img/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="114x114" href="img/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon" type="image/x-icon" sizes="144x144" href="img/apple-touch-icon-144x144-precomposed.png">
+
+    <!-- BASE CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+	<link href="css/vendors.css" rel="stylesheet">
+
+    <!-- YOUR CUSTOM CSS -->
+    <link href="css/custom.css" rel="stylesheet">
+    
+	<script src="js/vue-resource.js"></script>
+	<script src="js/vue-axios.js"></script>
+	<script src="js/vue.js"></script>
+	<script src="js/qs.js"></script>
+</head>
+
+<body >
+	
+	<div id="page" class="theia-exception">
+		
+	<header class="header menu_fixed" id="top_menu">
+		<div id="preloader"><div data-loader="circle-side"></div></div><!-- /Page Preload -->
+		<div id="logo">
+			<a href="index.html">
+				<img src="img/logo/snail-1.png" width="150" height="36" data-retina="true" alt="" class="logo_normal">
+				<img src="img/logo/snail-3.png" width="150" height="36" data-retina="true" alt="" class="logo_sticky">
+			</a>
+		</div>
+		<ul id="top_menu">
+			
+			<li id="sign-msg"><a href="#sign-in-dialog" id="sign-in" class="login" title="Sign In">登 录</a></li>
+ 		</ul>
+		<!-- /top_menu -->
+		<a href="#menu" class="btn_mobile">
+			<div class="hamburger hamburger--spin" id="hamburger">
+				<div class="hamburger-box">
+					<div class="hamburger-inner"></div>
+				</div>
+			</div>
+		</a>
+		<nav id="menu" class="main-menu">
+			<ul>
+				<li><span><a href="index.html">首页</a></span></li>
+				
+				<li><span><a href="hotel-detail.html">房间</a></span></li>
+				
+				<li id="info-show"><span><a href="user-info.html">会员信息</a></span></li>
+				<li id = 'reg-show'><span><a href="register.html">注册</a></span></li>
+				<li><span><a href="order-1.html">订单</a></span></li>
+			</ul>
+		</nav>
+
+	</header>
+	<!-- /header -->
+	
+	<main id="car-2">
+		<div class="hero_in cart_section" >
+			<div class="wrapper">
+				<div class="container">
+					<div class="bs-wizard clearfix">
+						<div class="bs-wizard-step">
+							<div class="text-center bs-wizard-stepnum">下订单</div>
+							<div class="progress">
+								<div class="progress-bar"></div>
+							</div>
+							<a href="cart-1.html" class="bs-wizard-dot"></a>
+						</div>
+
+						<div class="bs-wizard-step active">
+							<div class="text-center bs-wizard-stepnum">支付</div>
+							<div class="progress">
+								<div class="progress-bar"></div>
+							</div>
+							<a href="#0" class="bs-wizard-dot"></a>
+						</div>
+
+						<div class="bs-wizard-step disabled">
+							<div class="text-center bs-wizard-stepnum">完成</div>
+							<div class="progress">
+								<div class="progress-bar"></div>
+							</div>
+							<a href="#0" class="bs-wizard-dot"></a>
+						</div>
+					</div>
+					<!-- End bs-wizard -->
+				</div>
+			</div>
+		</div>
+		<!--/hero_in-->
+
+		<div class="bg_color_1">
+			<div class="container margin_60_35">
+				<div class="row">
+					<div class="col-lg-8">
+						<div class="box_cart">
+						
+						
+
+						<div class="form_title">
+							<h3><strong>A</strong>订单详情</h3>
+							<p>
+								若无误，点击右侧支付
+							</p>
+						</div>
+						<div class="step">
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label>订单号</label>
+										<div class="custom-select-form">
+											<p>{{o_id}}</p>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label>订单者电话号码</label>
+										<p>{{phone}}</p>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label>入住者电话号码</label>
+										<p>{{phone2}}</p>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6 col-sm-12">
+									<div class="form-group">
+											<label>总金额</label>
+										<p>￥：{{totalPrice}}</p>
+									</div>
+								</div>
+								<div class="col-md-3 col-sm-6">
+									<div class="form-group">
+											<label>入住时间</label>
+										<p>{{intime}}</p>
+									</div>
+								</div>
+								<div class="col-md-3 col-sm-6">
+									<div class="form-group">
+											<label>退房时间</label>
+										<p>{{outtime}}</p>
+									</div>
+								</div>
+								<div class="col-md-3 col-sm-6">
+									<div class="form-group">
+											<label>下单时间</label>
+										<p>{{ordertime}}</p>
+									</div>
+								</div>
+							</div>
+							<!--End row -->
+						</div>
+						<hr>
+						<!--End step -->
+						<div id="policy">
+							<h5>客户请注意，温馨提示</h5>
+							<p class="nomargin">如果客户有其他安排，不能入住本酒店，请提前退单，如果超过<span style="color: red;">预计入住当天下午6点</span>，则无法网上退订，一切解释权归本酒店所有。</p>
+						</div>
+						</div>
+					</div>
+					<!-- /col -->
+					
+					<aside class="col-lg-4" id="sidebar">
+						<div class="box_detail">
+							<div id="total_cart">
+								总金额 <span class="float-right">{{totalPrice}}RMB</span>
+							</div>
+							<ul class="cart_details">
+								<li>入住日期 <span>{{intime}}</span></li>
+								<li>退房日期 <span>{{outtime}}</span></li>
+								<li>房间数量 <span>{{num}}</span></li>
+								<li>房间类型 <span>{{roomType}}</span></li>
+							</ul>
+							<a @click="checkout" class="btn_1 full-width purchase" style="color: white;">支付</a>
+							<!-- <div class="text-center"><small>No money charged in this step</small></div> -->
+						</div>
+					</aside>
+				</div>
+				<!-- /row -->
+			</div>
+			<!-- /container -->
+		</div>
+		<!-- /bg_color_1 -->
+	</main>
+	<!--/main-->
+	
+	<footer>
+			<div class="container margin_60_35">
+				<div class="row">
+					<div class="col-lg-5 col-md-12 p-r-5">
+						<p>
+							<img src="img/logo/snail-1.png" width="150" height="36"
+								data-retina="true" alt="">
+						</p>
+						<p>生活不只有诗与远方，还有Snail酒店在您身边，与您同行。</p>
+						<div class="follow_us">
+							<ul>
+								<li>Follow us</li>
+								<li><a href="#0"><i class="ti-facebook"></i></a></li>
+								<li><a href="#0"><i class="ti-twitter-alt"></i></a></li>
+								<li><a href="#0"><i class="ti-google"></i></a></li>
+								<li><a href="#0"><i class="ti-pinterest"></i></a></li>
+								<li><a href="#0"><i class="ti-instagram"></i></a></li>
+							</ul>
+						</div>
+					</div>
+
+
+
+					<div class="col-lg-3 col-md-6 ml-lg-auto">
+						<h5>帮助链接</h5>
+						<ul class="links">
+							<li><a href="login.html">登录</a></li>
+							<li><a href="register.html">注册</a></li>
+							<li><a href="blog.html">百度地图</a></li>
+						</ul>
+					</div>
+					<div class="col-lg-3 col-md-6">
+						<h5>联系我们</h5>
+						<ul class="contacts">
+							<li><a href="tel://61280932400"><i class="ti-mobile"></i>
+									+ 61 23 8093 3400</a></li>
+							<li><a href="mailto:info@Panagea.com"><i
+									class="ti-email"></i> info@Panagea.com</a></li>
+						</ul>
+
+					</div>
+				</div>
+				<!--/row-->
+				<hr>
+				<div class="row">
+					<div class="col-lg-6">
+						<ul id="footer-selector">
+							<li>
+								<div class="styled-select" id="lang-selector">
+									<select>
+										<option value="English" selected>简体中文</option>
+										<option value="French">English</option>
+										<option value="Spanish">Spanish</option>
+										<option value="Russian">Russian</option>
+									</select>
+								</div>
+							</li>
+							<li></li>
+							<li><img src="img/cards_all.svg" alt=""></li>
+						</ul>
+					</div>
+					<div class="col-lg-6">
+						<ul id="additional_links">
+							<li><a href="#0">条款与条件</a></li>
+							<li><a href="#0">隐私</a></li>
+							<li><span>© 2018 Snail</span></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</footer>
+	</div>
+	<!-- page -->
+	<div id="alipay"></div>
+
+	
+	<div id="toTop"></div><!-- Back to top button -->
+	
+	<!-- COMMON SCRIPTS -->
+    <script src="js/jquery-2.2.4.min.js"></script>
+    <script src="js/common_scripts.js"></script>
+    <script src="js/main.js"></script>
+	<script src="assets/validate.js"></script>
+	<script src="js/cart-2.js"></script>
+	
+  
+</body>
+</html>

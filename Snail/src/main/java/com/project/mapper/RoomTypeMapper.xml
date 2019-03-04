@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ==================房型表===================== -->
+
+<mapper namespace="com.project.dao.IRoomTypeDao">	
+
+	<update id="updateRoomType" parameterType="com.project.bean.RoomTypeBean">
+		update roomtype 
+		<trim prefix = "set" suffixOverrides = "," suffix = "where rt_id = #{rt_id};">
+			rt_id = #{rt_id},
+			<if test="rt_num != 0">rt_num = #{rt_num},</if>
+			<if test="rt_area != 0">rt_area = #{rt_area},</if>
+			<if test="rt_img != null and rt_img != ''">rt_img = #{rt_img},</if>
+			<if test="rt_note != null and rt_note != ''">rt_note = #{rt_note},</if>
+			<if test="rt_name != null and rt_name != ''">rt_name = #{rt_name},</if>			
+		</trim>
+	</update>
+	
+	<insert id="insertRoomType" parameterType="com.project.bean.RoomTypeBean">
+		insert into roomtype(rt_num,rt_area,rt_img,rt_name,rt_note) 
+		values(#{rt_num},#{rt_area},#{rt_img},#{rt_name},#{rt_note});
+	</insert>
+</mapper>
